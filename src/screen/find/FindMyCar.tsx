@@ -1,5 +1,8 @@
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
+import { point } from "../../utils/temp";
+const width = 1000;
+const height = 1000;
 
 const Layout = styled.div`
   width: 100%;
@@ -11,15 +14,13 @@ const Layout = styled.div`
 `;
 
 const Canvas = styled.canvas`
-  width: 600px;
-  height: 600px;
   z-index: 1000;
 `;
 
 const ParkingImage = styled.img`
   position: absolute;
-  width: 600px;
-  height: 600px;
+  width: ${width}px;
+  height: ${height}px;
 `;
 
 interface PointProps {
@@ -27,88 +28,107 @@ interface PointProps {
   y: number;
 };
 
-const point: PointProps[] = [
-  {
-    x: 82,
-    y: 65,
-  },
-  {
-    x: 105,
-    y: 65,
-  },
-  {
-    x: 105,
-    y: 97,
-  },
-  {
-    x: 221,
-    y: 97,
-  },
-  {
-    x: 221,
-    y: 120,
-  },
-];
-
 const FindMyCar = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   let z = 0;
   let i = 0;
+  const drawSpeed = 1;
 
   const drawLine = () => {
     const canvas = canvasRef.current;
-    const context = canvas?.getContext('2d');
+    const ctx = canvas?.getContext("2d");
 
-    if (context) {
-      context.strokeStyle = "red";  // 선 색깔
-      context.lineCap = "square";
-      context.lineJoin = "round";	// 선 끄트머리(?)
-      context.lineWidth = 2;		// 선 굵기
-      
+    if (ctx) {
+      ctx.strokeStyle = "red";  // 선 색깔
+      ctx.lineCap = "square";
+      ctx.lineJoin = "round";	// 선 끄트머리(?)
+      ctx.lineWidth = 3;		// 선 굵기
+
       if( i >= point.length-1 ) {
         i = 0;
+        ctx.beginPath();
 
         setTimeout(() => {
-          context.clearRect(0, 0, 600, 600);
+          ctx.clearRect(0, 0, width, height);
           drawLine();
         }, 1000);
         
         return;
       }
 
-      context.beginPath();
-      context.moveTo(point[i].x, point[i].y);
+      if( i === 0 ) {
+        ctx.beginPath();
+        ctx.moveTo(point[i].x, point[i].y);
+      }
 
-      const interval = setInterval(() => {
-        if( point[i].x !== point[i+1].x ) {
-          const maxX = point[i+1].x - point[i].x;
-          
-          if( z >= maxX ) {
-            z = 0;
-            i++;
-            clearInterval(interval);
-            drawLine();
+      if( point[i].x !== point[i+1].x && point[i].y !== point[i+1].y ) {
+        ctx.lineTo(point[i+1].x, point[i+1].y);
+        ctx.stroke();
+        i++;
+        drawLine();
+
+      } else {
+        const interval = setInterval(() => {
+          if( point[i+1].x > point[i].x ) {
+            const maxX = point[i+1].x - point[i].x;
+            
+            if( z >= maxX ) {
+              z = 0;
+              i++;
+              clearInterval(interval);
+              drawLine();
+            }
+  
+            ctx.lineTo(point[i].x + z, point[i].y);
+            ctx.stroke();
+            z += 1;
+  
+          } else if( point[i].x > point[i+1].x ) {
+            const maxX = point[i].x - point[i+1].x;
+            
+            if( z >= maxX ) {
+              z = 0;
+              i++;
+              clearInterval(interval);
+              drawLine();
+            }
+            
+            ctx.lineTo(point[i].x - z, point[i].y);
+            ctx.stroke();
+            z += 1;
+  
+          } else if( point[i+1].y > point[i].y ) {
+            const maxY = point[i+1].y - point[i].y;
+  
+            ctx.lineTo(point[i].x, point[i].y + z);
+            ctx.stroke();
+            
+            if( z >= maxY ) {
+              z = 0;
+              i++;
+              clearInterval(interval);
+              drawLine();
+            }
+            
+            z += 1;
+  
+          } else if( point[i].y > point[i+1].y) {
+            const maxY = point[i].y - point[i+1].y;
+  
+            ctx.lineTo(point[i].x, point[i].y - z);
+            ctx.stroke();
+            
+            if( z >= maxY ) {
+              z = 0;
+              i++;
+              clearInterval(interval);
+              drawLine();
+            }
+            
+            z += 1;
           }
-
-          context.lineTo(point[i].x + z, point[i].y);
-          context.stroke();
-          z += 2;
-        } else if( point[i].y !== point[i+1].y ) {
-          const maxY = point[i+1].y - point[i].y;
-
-          context.lineTo(point[i].x, point[i].y + z);
-          context.stroke();
-          
-          if( z >= maxY ) {
-            z = 0;
-            i++;
-            clearInterval(interval);
-            drawLine();
-          }
-          
-          z += 2;
-        }
-      }, 40);
+        }, drawSpeed);
+      }
     }
   };
 
@@ -118,9 +138,9 @@ const FindMyCar = () => {
 
   return (
     <Layout>
-      <Canvas ref={canvasRef} />
+      <Canvas ref={canvasRef} width={width} height={height} />
       <ParkingImage
-        src={require("../../assets/imgs/img_1000_B1.jpg")}
+        src={require("../../assets/imgs/img_B1.png")}
       />
     </Layout>
   );

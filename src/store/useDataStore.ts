@@ -1,13 +1,30 @@
 import { create } from "zustand"
 
 interface DataState {
-  carNumber: string;
-  setCarNumber: (data: string) => void;
-}
+  kiosk: ApiResponse.KioskInfo;
+  setKiosk: (data: ApiResponse.KioskInfo) => void;
+  selectCar: ApiResponse.CarState;
+  setSelectCar: (data: ApiResponse.CarState) => void;
+};
+
+const defaultKioskState: ApiResponse.KioskInfo = {
+  parking_uuid: 0,
+  flor: "",
+  no: 0,
+  parking_img: "",
+};
+
+const defaultCarState: ApiResponse.CarState = {
+  flor: "",
+  parking_img: "",
+  car_number: "",
+};
 
 const useDataStore = create<DataState>()((set) => ({
-  carNumber: "",
-  setCarNumber: (data) => set({carNumber: data}),
+  kiosk: defaultKioskState,
+  setKiosk: (data) => set({ kiosk: data }),
+  selectCar: defaultCarState,
+  setSelectCar: (data) => set({ selectCar: data }),
 }));
 
 export default useDataStore;

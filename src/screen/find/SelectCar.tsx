@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
-import useDataStore from "../../store/useDataStore";
 import styled from "styled-components";
+import { carList } from "../../utils/temp";
+import useDataStore from "../../store/useDataStore";
 
 const Layout = styled.div`
   width: 100%;
@@ -24,14 +25,28 @@ const Button = styled.button`
 `;
 
 const SelectCar = () => {
-  const { carNumber } = useDataStore();
   const navigation = useNavigate();
+  const { setSelectCar } = useDataStore();
+
+  const onSelectCarNumber = (item: ApiResponse.CarState) => {
+    setSelectCar(item);
+    navigation("/find");
+  };
 
   return (
     <Layout>
-      <Button
-        onClick={() => navigation("/find")}
-      >{carNumber}</Button>
+      {
+        carList.map((item, index) => {
+          return (
+            <Button
+              onClick={() => onSelectCarNumber(item)}
+              key={index}
+            >
+              {item.car_number}
+            </Button>
+          );
+        })
+      }
     </Layout>
   )
 };

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import useDataStore from "../../store/useDataStore";
+import { kioskInfo } from "../../utils/temp";
 
 const Layout = styled.div`
   width: 100%;
@@ -42,17 +43,16 @@ const Button = styled.button`
 `;
 
 const InputCarNumber = () => {
-  const { setCarNumber } = useDataStore();
+  const { setKiosk } = useDataStore();
   const [ first, setFirst ] = useState("");
   const [ second, setSecond ] = useState("");
   const [ third, setThird ] = useState("");
   const [ fourth, setFourth ] = useState("");
   const navigation = useNavigate();
-  
+
   useEffect(() => {
-    const value = `${first}${second}${third}${fourth}`;
-    setCarNumber(value);
-  }, [first, second, third, fourth]);
+    setKiosk(kioskInfo);
+  }, []);
 
   return (
     <Layout>
