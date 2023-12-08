@@ -1,12 +1,12 @@
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import './App.css';
-import Main from './screen/Main';
+import Navigation from './screen/Navigation';
 
-function App() {
+const App = () => {
   return (
     <BrowserRouter>
-      <Main />
+      <Navigation />
     </BrowserRouter>
   );
 }

@@ -15,16 +15,19 @@ export const carList: ApiResponse.CarState[] = [
     flor: "B1",
     parking_img: "img_B1.png",
     car_number: "12가1234",
+    parking_dtm: "2023.12.06 12:30",
   },
   {
     flor: "B2",
     parking_img: "img_B1.png",
     car_number: "66가1234",
+    parking_dtm: "2023.12.06 11:30",
   },
   {
     flor: "B3",
     parking_img: "img_B1.png",
     car_number: "102가1234",
+    parking_dtm: "2023.12.06 13:30",
   },
 ]
 

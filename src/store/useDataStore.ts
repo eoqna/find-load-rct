@@ -18,6 +18,7 @@ const defaultCarState: ApiResponse.CarState = {
   flor: "",
   parking_img: "",
   car_number: "",
+  parking_dtm: "",
 };
 
 const useDataStore = create<DataState>()((set) => ({
