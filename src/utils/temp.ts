@@ -3,12 +3,34 @@ interface PointProps {
   y: number;
 };
 
+interface OptionProps {
+  value: number;
+  parking_name: string;
+}
+
 export const kioskInfo: ApiResponse.KioskInfo = {
   parking_uuid: 1000,
   flor: "B2",
   no: 1,
   parking_img: "img_B1.png",
 }
+
+export const options: OptionProps[] = [
+  {
+    value: 0,
+    parking_name: "다온빌딩",
+  },
+  {
+    value: 1,
+    parking_name: "여의도 IFC 몰",
+  },
+  {
+    value: 2,
+    parking_name: "삼섬동 코엑스",
+  },
+]
+
+export const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0, 11]; 
 
 export const carList: ApiResponse.CarState[] = [
   {

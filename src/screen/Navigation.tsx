@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router";
 import styled from "styled-components";
-import InputCarNumber from "./InputCarNumber";
+import InputCarNumber from "./mobile/InputCarNumber";
 import SelectCar from "./SelectCar";
 import FindLoad from "./kiosk/FindLoad";
 import Main from "./Main";

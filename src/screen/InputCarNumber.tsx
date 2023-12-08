@@ -85,8 +85,7 @@ const InputCarNumber = () => {
   const [ fourth, setFourth ] = useState("");
   const [ carNumber, setCarNumber ] = useState("");
   const navigation = useNavigate();
-  const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0, 11]; 
-
+  
   useEffect(() => {
     setKiosk(kioskInfo);
   }, []);

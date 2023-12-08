@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import useDataStore from "../../store/useDataStore";
-import { kioskInfo } from "../../utils/temp";
+import { kioskInfo, numbers, options } from "../../utils/temp";
 import Icon from '@mdi/react';
 import { mdiCloseBox } from '@mdi/js';
 import Footer from "../../components/Footer";
@@ -37,7 +37,7 @@ const InputLayout = styled.div`
 const Input = styled.input`
   width: 20%;
   height: 10vh;
-  font-size: 7vw;
+  font-size: 1.8rem;
   color: #006eb6;
   font-weight: bold;
   margin: 0 5px;
@@ -47,34 +47,21 @@ const Input = styled.input`
 `;
 
 const NumberPadLayout = styled.div`
-  display: flex;
-  width: 100%;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin-top: 10px;
+  text-align: center;
+  margin-top: 5px;
 `;
 
-const NumberPadInnerLayout = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-`;
-
-const NumberPad = styled.div`
+const NumberPad = styled.button`
   width: 30%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   margin: 5px;
   height: 8vh;
   text-align: center;
   background: #fff;
-  font-size: 6vw;
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 1.5rem;
   border-radius: 5px;
   cursor: pointer;
+  outline: none;
 `;
 
 const Select = styled.select`
@@ -177,110 +164,65 @@ const InputCarNumber = () => {
       <Header text="차량번호 입력" />
       <Title>차량번호 뒤의 4자리를 입력해 주세요.</Title>
       <Select>
-        <Option value={0}>다온빌딩</Option>
-        <Option value={1}>여의도 IFC 몰</Option>
-        <Option value={2}>삼성동 코엑스</Option>
+        {options.map((item) => {
+          return (
+            <Option value={item.value} key={item.value}>{item.parking_name}</Option>
+          );
+        })}
       </Select>
       <InputLayout>
         <Input
           type="text"
-          id="input_1"
           readOnly
           maxLength={1}
           value={first}
         />
         <Input
           type="text"
-          id="input_2"
           readOnly
           maxLength={1}
           value={second}
         />
         <Input
           type="text"
-          id="input_3"
           readOnly
           maxLength={1}
           value={third}
         />
         <Input
           type="text"
-          id="input_4"
           readOnly
-          value={fourth}
           maxLength={1}
+          value={fourth}
         />
       </InputLayout>
       <NumberPadLayout>
-        <NumberPadInnerLayout>
-          <NumberPad
-            onClick={(e) => onClickNumber(e.currentTarget.innerHTML)}
-          >
-            1
-          </NumberPad>
-          <NumberPad
-            onClick={(e) => onClickNumber(e.currentTarget.innerHTML)}
-          >
-            2
-          </NumberPad>
-          <NumberPad
-            onClick={(e) => onClickNumber(e.currentTarget.innerHTML)}
-          >
-            3
-          </NumberPad>
-        </NumberPadInnerLayout>
-        <NumberPadInnerLayout>
-          <NumberPad
-            onClick={(e) => onClickNumber(e.currentTarget.innerHTML)}
-          >
-            4
-          </NumberPad>
-          <NumberPad
-            onClick={(e) => onClickNumber(e.currentTarget.innerHTML)}
-          >
-            5
-          </NumberPad>
-          <NumberPad
-            onClick={(e) => onClickNumber(e.currentTarget.innerHTML)}
-          >
-            6
-          </NumberPad>
-        </NumberPadInnerLayout>
-        <NumberPadInnerLayout>
-          <NumberPad
-            onClick={(e) => onClickNumber(e.currentTarget.innerHTML)}
-          >
-            7
-          </NumberPad>
-          <NumberPad
-            onClick={(e) => onClickNumber(e.currentTarget.innerHTML)}
-          >
-            8
-          </NumberPad>
-          <NumberPad
-            onClick={(e) => onClickNumber(e.currentTarget.innerHTML)}
-          >
-            9
-          </NumberPad>
-        </NumberPadInnerLayout>
-        <NumberPadInnerLayout>
-          <NumberPad
-            onClick={onClickCancel}
-          >
-            <Icon path={mdiCloseBox} size={1.3} />
-          </NumberPad>
-          <NumberPad
-            onClick={(e) => onClickNumber(e.currentTarget.innerHTML)}
-          >
-            0
-          </NumberPad>
-          <NumberPad 
-            style={{background: "#006eb6", color: "#fff"}}
-            onClick={onSubmit}
-          >
-            확인
-          </NumberPad>
-        </NumberPadInnerLayout>
+        {numbers.map((item) => {
+            if( item === 10 ) {
+              return(
+                <NumberPad
+                  key={item}
+                  onClick={onClickCancel}
+                >
+                  <Icon path={mdiCloseBox} size={1} color="#006eb6" />
+                </NumberPad>
+              );
+            } else if ( item === 11 ) {
+              return (
+                <NumberPad 
+                  key={item}
+                  style={{background: "#006eb6", color: "#fff", border: 0}}
+                  onClick={onSubmit}
+                >
+                  확인
+                </NumberPad>
+              );
+            } else {
+              return(
+                <NumberPad key={item} onClick={(e) => onClickNumber(e.currentTarget.innerHTML)}>{item}</NumberPad>
+              );
+            }
+          })}
       </NumberPadLayout>
       <Footer />
     </Layout>
