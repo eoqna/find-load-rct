@@ -1,11 +1,12 @@
 import { Route, Routes } from "react-router";
 import styled from "styled-components";
-import InputCarNumber from "./mobile/InputCarNumber";
+import InputCarNumber from "./InputCarNumber";
 import SelectCar from "./SelectCar";
 import FindLoad from "./kiosk/FindLoad";
 import Main from "./Main";
 import ParkingInfo from "./ParkingInfo";
 import Footer from "../components/Footer";
+import FindMyCar from "./mobile/FindMyCar";
 
 const Layout = styled.div`
   width: 100vw;
@@ -20,7 +21,8 @@ const Navigation = () => {
         <Route path="/input" element={<InputCarNumber />} />
         <Route path="/select" element={<SelectCar />} />
         <Route path="/info" element={<ParkingInfo />} />
-        <Route path="/find" element={<FindLoad />} />
+        <Route path="/load" element={<FindLoad />} />
+        <Route path="/find" element={<FindMyCar />} />
         <Route path="/footer" element={<Footer />} />
       </Routes>
     </Layout>

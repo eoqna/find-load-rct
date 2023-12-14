@@ -5,6 +5,10 @@ interface DataState {
   setKiosk: (data: ApiResponse.KioskInfo) => void;
   selectCar: ApiResponse.CarState;
   setSelectCar: (data: ApiResponse.CarState) => void;
+  platformWidth: number;
+  setPlatformWidth: (data: number) => void;
+  mobile: boolean;
+  isMobile: (data: boolean) => void;
 };
 
 const defaultKioskState: ApiResponse.KioskInfo = {
@@ -26,6 +30,10 @@ const useDataStore = create<DataState>()((set) => ({
   setKiosk: (data) => set({ kiosk: data }),
   selectCar: defaultCarState,
   setSelectCar: (data) => set({ selectCar: data }),
+  platformWidth: 0,
+  setPlatformWidth: (data) => set({ platformWidth: data }),
+  mobile: false,
+  isMobile: (data) => set({ mobile: data }),
 }));
 
 export default useDataStore;

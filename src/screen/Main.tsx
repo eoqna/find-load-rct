@@ -3,6 +3,7 @@ import { useNavigate } from "react-router";
 import styled from "styled-components";
 import image from "../assets/imgs/01_main.png";
 import moment from "moment";
+import useDataStore from "../store/useDataStore";
 
 const Layout = styled.div`
   width: 100%;
@@ -67,7 +68,22 @@ const Bottom = styled.p`
 
 const Main = () => {
   const navigation = useNavigate();
+  const { mobile, platformWidth, setPlatformWidth, isMobile } = useDataStore();
   const [ time, setTime ] = useState(moment().format("HH:mm"));
+
+  useEffect(() => {
+    const setInnerWidth = () => {
+      setPlatformWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", setInnerWidth);
+
+    if(platformWidth < 800) {
+      isMobile(true);
+    } else {
+      isMobile(false);
+    }
+  }, []);
 
   const now = () => {
     setTime(moment().format("HH:mm"));
@@ -87,10 +103,17 @@ const Main = () => {
     <Layout
       onClick={() => navigation("/input")}
     >
-      <TitleLayout>
-        <SubTitle>AUTO PAY STATION</SubTitle>
-        <Title>주차 위치 조회</Title>
-      </TitleLayout>
+        {mobile ?
+          <TitleLayout>
+            <SubTitle>DAONTEC PARKING SERVICE</SubTitle>
+            <Title>주차 안내 서비스</Title>
+          </TitleLayout>
+            :
+          <TitleLayout>
+            <SubTitle>AUTO PAY STATION</SubTitle>
+            <Title>주차 위치 조회</Title>
+          </TitleLayout>
+        }
       <TimeLayout>
         <Time>{time}</Time>
       </TimeLayout>

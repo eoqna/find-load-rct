@@ -44,16 +44,7 @@ const FindLoad = () => {
       ctx.lineWidth = 3;		// 선 굵기
 
       if( i >= rePoint.length-1 ) {
-        // i = 0;
         ctx.beginPath();
-
-        console.log(rePoint);
-
-        // setTimeout(() => {
-        //   ctx.clearRect(0, 0, width, height);
-        //   drawLine();
-        // }, 1000);
-        
         return;
       }
 

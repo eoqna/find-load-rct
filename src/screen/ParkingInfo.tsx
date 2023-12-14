@@ -80,11 +80,15 @@ const Image = styled.img`
 `;
 
 const ParkingInfo = () => {
-  const { selectCar } = useDataStore();
+  const { mobile, selectCar } = useDataStore();
   const navigation = useNavigate();
 
   const onClickFindLoad = () => {
-    navigation("/find");
+    if( mobile ) {
+      return navigation("/find");
+    }
+
+    navigation("/load");
   }
 
   return (
@@ -96,6 +100,10 @@ const ParkingInfo = () => {
           alt="차량 이미지"
         />
         <CarInfo>
+          <TextLayout>
+            <Label>주차장</Label>
+            <Text>다온빌딩</Text>
+          </TextLayout>
           <TextLayout>
             <Label>차량번호</Label>
             <Text>{selectCar.car_number}</Text>
@@ -114,6 +122,15 @@ const ParkingInfo = () => {
           </TextLayout>
         </CarInfo>
       </CarInfoLayout>
+      {mobile ?
+      <ButtonLayout style={{ justifyContent: "center"}}>
+        <Image
+          src={require("../assets/imgs/위치안내.png")}
+          alt="위치안내"
+          onClick={onClickFindLoad}
+        />
+      </ButtonLayout>
+        :
       <ButtonLayout>
         <Image
           src={require("../assets/imgs/위치출력.png")}
@@ -125,6 +142,7 @@ const ParkingInfo = () => {
           onClick={onClickFindLoad}
         />
       </ButtonLayout>
+      }
       <Footer text="차량선택" prev="select" />
     </Layout>
   );

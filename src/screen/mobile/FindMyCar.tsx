@@ -35,25 +35,8 @@ const FindMyCar = () => {
     const ctx = canvas?.getContext("2d");
 
     if (ctx) {
-      ctx.strokeStyle = "red";  // 선 색깔
-      ctx.lineCap = "square";
-      ctx.lineJoin = "round";	// 선 끄트머리(?)
-      ctx.lineWidth = 3;		// 선 굵기
-
-      for(let i = 0; i<rePoint.length; i++) {
-        if( i >= rePoint.length-1 ) {
-          ctx.beginPath();
-          return;
-        }
-
-        if( i === 0) {
-          ctx.beginPath();
-          ctx.moveTo(rePoint[i].x, rePoint[i].y);
-        } else {
-          ctx.lineTo(rePoint[i+1].x, rePoint[i+1].y);
-          ctx.stroke();
-        }
-      }
+      ctx.fillStyle = "red";
+      ctx.fillRect(112, 136, 8, 3);
     }
   };
 
@@ -96,7 +79,7 @@ const FindMyCar = () => {
 
   return (
     <Layout>
-      <Header text="위치안내" />
+      <Header text="다온빌딩 B3" />
       <Canvas className="canvas-layout"></Canvas>
       {/* <ProgressiveImage 
         src={require("../assets/imgs/img_B1.png")}
