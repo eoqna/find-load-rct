@@ -1,13 +1,12 @@
 import styled from "styled-components";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-import useDataStore from "../store/useDataStore";
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
+import useDataStore from "../../store/useDataStore";
 import { useNavigate } from "react-router";
 
 const Layout = styled.div`
   width: 100%;
   height: 100%;
-  background: rgb(26,28, 36);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -96,7 +95,7 @@ const ParkingInfo = () => {
       <Header text="주차정보" />
       <CarInfoLayout>
         <CarImage
-          src={require("../assets/imgs/testcar.jpg")}
+          src={require("../../assets/imgs/testcar.jpg")}
           alt="차량 이미지"
         />
         <CarInfo>
@@ -122,27 +121,18 @@ const ParkingInfo = () => {
           </TextLayout>
         </CarInfo>
       </CarInfoLayout>
-      {mobile ?
-      <ButtonLayout style={{ justifyContent: "center"}}>
-        <Image
-          src={require("../assets/imgs/위치안내.png")}
-          alt="위치안내"
-          onClick={onClickFindLoad}
-        />
-      </ButtonLayout>
-        :
+
       <ButtonLayout>
         <Image
-          src={require("../assets/imgs/위치출력.png")}
+          src={require("../../assets/imgs/위치출력.png")}
           alt="위치출력"
         />
         <Image
-          src={require("../assets/imgs/위치안내.png")}
+          src={require("../../assets/imgs/위치안내.png")}
           alt="위치안내"
           onClick={onClickFindLoad}
         />
       </ButtonLayout>
-      }
       <Footer text="차량선택" prev="select" />
     </Layout>
   );

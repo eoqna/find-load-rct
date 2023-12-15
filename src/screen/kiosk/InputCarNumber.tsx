@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import useDataStore from "../../store/useDataStore";
-import { kioskInfo, numbers, options } from "../../utils/temp";
+import { kioskInfo, numbers } from "../../utils/temp";
 import Icon from '@mdi/react';
 import { mdiCloseBox } from '@mdi/js';
 import Footer from "../../components/Footer";
@@ -11,7 +11,6 @@ import Header from "../../components/Header";
 const Layout = styled.div`
   width: 100%;
   height: 100%;
-  background: rgb(26,28, 36);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -19,11 +18,11 @@ const Layout = styled.div`
 `;
 
 const Title = styled.h2`
-  margin: 0 0 1vh;
   padding: 0;
   font-size: 4.5vw;
   font-weight: 100;
   color: #fff;
+  margin-bottom: 6vh;
 `;
 
 const InputLayout = styled.div`
@@ -163,13 +162,6 @@ const InputCarNumber = () => {
     <Layout>
       <Header text="차량번호 입력" />
       <Title>차량번호 뒤의 4자리를 입력해 주세요.</Title>
-      <Select>
-        {options.map((item) => {
-          return (
-            <Option value={item.value} key={item.value}>{item.parking_name}</Option>
-          );
-        })}
-      </Select>
       <InputLayout>
         <Input
           type="text"
