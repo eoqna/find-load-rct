@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import useDataStore from "../../store/useDataStore";
-import { kioskInfo, numbers } from "../../utils/temp";
+import { numbers } from "../../utils/temp";
 import Icon from '@mdi/react';
 import { mdiCloseBox } from '@mdi/js';
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
+import axiosClient from "../../utils/axiosClient";
 
 const Layout = styled.div`
   width: 100%;
@@ -78,17 +79,13 @@ const Option = styled.option`
 `;
 
 const InputCarNumber = () => {
-  const { setKiosk } = useDataStore();
   const [ first, setFirst ] = useState("");
   const [ second, setSecond ] = useState("");
   const [ third, setThird ] = useState("");
   const [ fourth, setFourth ] = useState("");
   const [ carNumber, setCarNumber ] = useState("");
+  const { setCarList } = useDataStore();
   const navigation = useNavigate();
-
-  useEffect(() => {
-    setKiosk(kioskInfo);
-  }, [setKiosk]);
   
   const init = () => {
     setFirst("");
@@ -148,13 +145,18 @@ const InputCarNumber = () => {
     if( carNumber.length !== 4) {
       return alert("차량 번호 4자리를 입력해 주세요.");
     }
-    
-    if( carNumber !== "1234" ) {
-      alert("조회된 차량이 없습니다.");
+
+    const { data } = await axiosClient.post("/api/kiosk/beta/parking/car-list", {
+      car_num : carNumber,
+    });
+
+    if( data.list.length < 0 ) {
       init();
-      return;
+      return alert("조회된 차량이 없습니다.");
     }
-    
+
+    setCarList(data.list);
+
     navigation("/select");
   }
 

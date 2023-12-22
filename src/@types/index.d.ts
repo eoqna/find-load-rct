@@ -1,15 +1,23 @@
 declare namespace ApiResponse {
   interface KioskInfo {
-    parking_uuid: number;
-    flor: string;
-    no: number;
-    parking_img: string;
+    node_id: string;
+    flor_nm: string;
+    img_path: string;
   }
 
   interface CarState {
-    flor: string;
-    parking_img: string;
-    car_number: string;
-    parking_dtm: string;
+    car_num: string;
+    in_dtm: string;
+    img_path: string;
+    node_id: string;
+    flor_nm: string;
+  }
+
+  interface Route {
+    node_id: string;
+    position_x: number;
+    position_y: number;
+    flor_nm: string;
+    rotate: number;
   }
 };

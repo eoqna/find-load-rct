@@ -2,7 +2,7 @@ import { Route, Routes } from "react-router";
 import styled from "styled-components";
 import InputCarNumber from "./kiosk/InputCarNumber";
 import SelectCar from "./SelectCar";
-import FindLoad from "./kiosk/FindLoad";
+import FindRoute from "./kiosk/FindRoute";
 import Main from "./Main";
 import ParkingInfo from "./kiosk/ParkingInfo";
 import Footer from "../components/Footer";
@@ -27,7 +27,7 @@ const Navigation = () => {
         <Route path="/kiosk/input" element={<InputCarNumber />} />
         <Route path="/select" element={<SelectCar />} />
         <Route path="/kiosk/info" element={<ParkingInfo />} />
-        <Route path="/kiosk/road" element={<FindLoad />} />
+        <Route path="/kiosk/route" element={<FindRoute />} />
         <Route path="/mobile/find" element={<FindMyCar />} />
         <Route path="/common/footer" element={<Footer />} />
       </Routes>

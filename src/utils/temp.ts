@@ -8,13 +8,6 @@ interface OptionProps {
   parking_name: string;
 }
 
-export const kioskInfo: ApiResponse.KioskInfo = {
-  parking_uuid: 1000,
-  flor: "B2",
-  no: 1,
-  parking_img: "img_B1.png",
-}
-
 export const options: OptionProps[] = [
   {
     value: 0,
@@ -31,27 +24,6 @@ export const options: OptionProps[] = [
 ]
 
 export const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0, 11]; 
-
-export const carList: ApiResponse.CarState[] = [
-  {
-    flor: "B1",
-    parking_img: "img_B1.png",
-    car_number: "12가1234",
-    parking_dtm: "2023.12.06 12:30",
-  },
-  {
-    flor: "B2",
-    parking_img: "img_B1.png",
-    car_number: "66가1234",
-    parking_dtm: "2023.12.06 11:30",
-  },
-  {
-    flor: "B3",
-    parking_img: "img_B1.png",
-    car_number: "102가1234",
-    parking_dtm: "2023.12.06 13:30",
-  },
-]
 
 export const parkingInfo = {
   parking_uuid: 1000,

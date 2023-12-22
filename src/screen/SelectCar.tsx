@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { carList } from "../utils/temp";
 import useDataStore from "../store/useDataStore";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
@@ -66,11 +65,11 @@ const Text = styled.p`
 
 const SelectCar = () => {
   const navigation = useNavigate();
-  const { setSelectCar } = useDataStore();
+  const { carList, setSelectCar } = useDataStore();
 
   const onSelectCarNumber = (item: ApiResponse.CarState) => {
     setSelectCar(item);
-    navigation("/info");
+    navigation("/kiosk/info");
   };
 
   return (
@@ -93,13 +92,13 @@ const SelectCar = () => {
                   차량번호
                 </Label>
                 <Text>
-                  {item.car_number}
+                  {item.car_num}
                 </Text>
                 <Label>
                   입차시간
                 </Label>
                 <Text>
-                  {item.parking_dtm}
+                  {item.in_dtm}
                 </Text>
               </CarInfo>
             </CarListLayout>

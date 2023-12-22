@@ -3,6 +3,7 @@ import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import useDataStore from "../../store/useDataStore";
 import { useNavigate } from "react-router";
+import axiosClient from "../../utils/axiosClient";
 
 const Layout = styled.div`
   width: 100%;
@@ -79,15 +80,22 @@ const Image = styled.img`
 `;
 
 const ParkingInfo = () => {
-  const { mobile, selectCar } = useDataStore();
+  const { mobile, selectCar, setRoute } = useDataStore();
   const navigation = useNavigate();
 
-  const onClickFindLoad = () => {
+  const onClickFindRoute = async () => {
     if( mobile ) {
-      return navigation("/find");
+      return navigation("/mobile/find");
     }
 
-    navigation("/load");
+    const { data } = await axiosClient.post("/api/kiosk/beta/parking/find-route", {
+      start_node_id: "K10001",
+      end_node_id: "E10209",
+    });
+
+    setRoute(data.list);
+
+    navigation("/kiosk/route");
   }
 
   return (
@@ -105,19 +113,15 @@ const ParkingInfo = () => {
           </TextLayout>
           <TextLayout>
             <Label>차량번호</Label>
-            <Text>{selectCar.car_number}</Text>
+            <Text>{selectCar.car_num}</Text>
           </TextLayout>
           <TextLayout>
             <Label>층</Label>
-            <Text>{selectCar.flor}</Text>
+            <Text>{selectCar.flor_nm}</Text>
           </TextLayout>
           <TextLayout>
-          <Label>기둥번호</Label>
-          <Text>B1-4</Text>
-          </TextLayout>
-          <TextLayout>
-          <Label>입차시간</Label>
-          <Text>{selectCar.parking_dtm}</Text>
+            <Label>입차시간</Label>
+            <Text>{selectCar.in_dtm}</Text>
           </TextLayout>
         </CarInfo>
       </CarInfoLayout>
@@ -130,7 +134,7 @@ const ParkingInfo = () => {
         <Image
           src={require("../../assets/imgs/위치안내.png")}
           alt="위치안내"
-          onClick={onClickFindLoad}
+          onClick={onClickFindRoute}
         />
       </ButtonLayout>
       <Footer text="차량선택" prev="select" />
