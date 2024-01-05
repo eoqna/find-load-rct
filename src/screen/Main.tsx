@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import styled from "styled-components";
-import image from "../assets/imgs/01_main.png";
+import image from "../assets/imgs/background.png";
 import moment from "moment";
 import useDataStore from "../store/useDataStore";
 
@@ -100,9 +100,9 @@ const Main = () => {
   }, []);
 
   const onClickBackground = () => {
-    if(mobile) {
-      return navigation("/mobile/login");
-    }
+    // if(mobile) {
+    //   return navigation("/mobile/login");
+    // }
 
     navigation("/kiosk/input");
   }

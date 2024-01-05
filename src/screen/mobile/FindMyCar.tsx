@@ -1,8 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { point } from "../../utils/temp";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
+import useDataStore from "../../store/useDataStore";
 let width: number | undefined;
 
 const Layout = styled.div`
@@ -21,21 +22,29 @@ const ParkingImage = styled.img`
   width: 90%;
 `;
 
-interface PointProps {
-  x: number;
-  y: number;
-};
-
 const FindMyCar = () => {
-  const rePoint: PointProps[] = [];
+  const { myCarInfo } = useDataStore();
 
-  const drawLine = () => {
+  const drawLine = (positionX: number, positionY: number) => {
     const canvas: HTMLCanvasElement | null = document.querySelector("#canvas");
     const ctx = canvas?.getContext("2d");
 
     if (ctx) {
+      // ctx.strokeStyle = "red";
+      // ctx.lineCap = "square";
+      // ctx.lineJoin = "round";	// 선 끄트머리(?)
+      // ctx.lineWidth = 2;
+
+      // ctx.beginPath();
+      // ctx.moveTo(positionX, positionY);
+      // ctx.lineTo(positionX + 2, positionY + 2);
+      // ctx.stroke();
+
+      // ctx.strokeStyle = "red";
+      // ctx.strokeRect(positionX, positionY, 2, 2);
+
       ctx.fillStyle = "red";
-      ctx.fillRect(112, 136, 8, 3);
+      ctx.fillRect(positionX, positionY, 5, 5);
     }
   };
 
@@ -50,46 +59,32 @@ const FindMyCar = () => {
           width=${width} 
           height=${width} 
           style="
-          position: relative; z-index: 1000;
-          max-width: 1000px;
-          max-height: 1000px;
-        ">
-        </canvas>
+            position: relative; 
+            z-index: 1000;
+            max-width: 1000px;
+            max-height: 1000px;
+        "></canvas>
       `;
 
       if( width < 1000 ) {
-        console.log((width / 1000).toFixed(2));
-        console.log(Math.round(width / 1000));
+        const magnification = Number((width / 4000));
+        const positionX = myCarInfo.position_x * magnification;
+        const positionY = myCarInfo.position_y * magnification;
 
-        const magnification = Number((width / 1000).toFixed(2));
-
-
-        for(let i=0; i<point.length; i++) {
-          rePoint.push({
-            x: Math.round(point[i].x * magnification),
-            y: Math.round(point[i].y * magnification),
-          });
-        }
+        drawLine(positionX, positionY);
       }
-
-      drawLine();
     }
-  }, [drawLine]);
+  }, []);
 
   return (
     <Layout>
       <Header text="다온빌딩 B3" />
       <Canvas className="canvas-layout"></Canvas>
-      {/* <ProgressiveImage 
-        src={require("../assets/imgs/img_B1.png")}
-        placeholder={require("../assets/imgs/move_floor.png")}
-        delay={2}
-      /> */}
       <ParkingImage
         className="image"
-        src={require("../../assets/imgs/img_B1.png")}
+        src={myCarInfo.flor_img_path}
       />
-      <Footer text="주차정보" prev="info" />
+      <Footer text="주차정보" prev="kiosk/info" />
     </Layout>
   );
 };

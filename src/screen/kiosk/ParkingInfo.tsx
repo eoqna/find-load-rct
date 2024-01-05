@@ -4,15 +4,9 @@ import Footer from "../../components/Footer";
 import useDataStore from "../../store/useDataStore";
 import { useNavigate } from "react-router";
 import axiosClient from "../../utils/axiosClient";
-
-const Layout = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-`;
+import { Layout } from "../../utils/styles/Common";
+import useAppStore from "../../store/useAppState";
+import { Colors } from "../../utils/colors";
 
 const CarInfoLayout = styled.div`
   width: 80%;
@@ -68,32 +62,56 @@ const Text = styled.p`
 
 const ButtonLayout = styled.div`
   display: flex;
-  width: 85%;
-  height: 15%;
+  width: 80%;
+  height: 10%;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
 `;
 
-const Image = styled.img`
-  width: 46%;
+const Button = styled.button`
+  width: 45%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-size: 3vw;
+  font-weight: bold;
+  color: ${Colors.White};
+  background: ${Colors.Primary};
+  border: 0 solid ${Colors.Primary};
+  border-radius: 10px;
 `;
 
 const ParkingInfo = () => {
-  const { mobile, selectCar, setRoute } = useDataStore();
+  const { setModal } = useAppStore();
+  const { mobile, selectCar, setPathInfo, setMyCarInfo } = useDataStore();
   const navigation = useNavigate();
 
   const onClickFindRoute = async () => {
     if( mobile ) {
+      const { data } = await axiosClient.post("/api/mobile/beta/parking/location", {
+        car_num: "30다1192",
+      });
+
+      if( data.code === "404" ) {
+        return setModal({ open: true, content: data.msg });
+      }
+
+      setMyCarInfo(data.carInfo);
+
       return navigation("/mobile/find");
     }
 
     const { data } = await axiosClient.post("/api/kiosk/beta/parking/find-route", {
-      start_node_id: "K10001",
-      end_node_id: "E10209",
+      start_node: "K30001",
+      end_node: selectCar.node_id,
     });
 
-    setRoute(data.list);
+    if( data.code === "404" ) {
+      return setModal({ open: true, content: data.msg });
+    }
+
+    setPathInfo(data.list);
 
     navigation("/kiosk/route");
   }
@@ -103,7 +121,7 @@ const ParkingInfo = () => {
       <Header text="주차정보" />
       <CarInfoLayout>
         <CarImage
-          src={require("../../assets/imgs/testcar.jpg")}
+          src={selectCar.img_path}
           alt="차량 이미지"
         />
         <CarInfo>
@@ -127,15 +145,8 @@ const ParkingInfo = () => {
       </CarInfoLayout>
 
       <ButtonLayout>
-        <Image
-          src={require("../../assets/imgs/위치출력.png")}
-          alt="위치출력"
-        />
-        <Image
-          src={require("../../assets/imgs/위치안내.png")}
-          alt="위치안내"
-          onClick={onClickFindRoute}
-        />
+        <Button>위치출력</Button>
+        <Button onClick={onClickFindRoute}>위치안내</Button>
       </ButtonLayout>
       <Footer text="차량선택" prev="select" />
     </Layout>

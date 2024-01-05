@@ -11,13 +11,19 @@ declare namespace ApiResponse {
     img_path: string;
     node_id: string;
     flor_nm: string;
-  }
-
-  interface Route {
-    node_id: string;
+    flor_img_path?: string;
     position_x: number;
     position_y: number;
-    flor_nm: string;
-    rotate: number;
+  }
+
+  interface PathInfo {
+    canvas_img: string;
+    canvas: { x: number, y: number };
+    path: Path[];
+  }
+
+  interface Path {
+    x: number;
+    y: number;
   }
 };

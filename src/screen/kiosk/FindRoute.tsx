@@ -1,18 +1,13 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import useDataStore from "../../store/useDataStore";
+import { Layout } from "../../utils/styles/Common";
+import { useNavigate } from "react-router";
+import moment from "moment";
 let width: number | undefined;
-
-const Layout = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-`;
+let cvs: Element | null;
 
 const Canvas = styled.div``;
 
@@ -27,21 +22,68 @@ interface PointProps {
 };
 
 const FindRoute = () => {
-  const { route } = useDataStore();
+  const { pathInfo } = useDataStore();
+  const navigation = useNavigate();
+  const [ imgPath, setImgPath ] = useState("");
   let z = 0;
   let i = 0;
   const drawSpeed = 1;
   const rePoint: PointProps[] = [];
 
+  useEffect(() => {
+    if( pathInfo.length < 1 ) {
+      navigation("/");
+    }
+  }, [pathInfo, navigation]);
+
+  const initCanvas = () => {
+    cvs = document.querySelector(".canvas-layout");
+    width = document.querySelector(".image")?.clientWidth;
+
+    if( cvs && width ) {
+      const magnification =  Number((width / 4000));
+
+      cvs.innerHTML += `
+        <canvas 
+          id="canvas"
+          width=${width} 
+          height=${width} 
+          style="
+            position: relative;
+            z-index: 1000;
+            max-width: 1000px;
+            max-height: 1000px;
+        "></canvas>
+      `;
+
+      setImgPath(pathInfo[1].canvas_img);
+
+      console.log(pathInfo[1].path);
+    
+      for(let i=0; i<pathInfo[1].path.length; i++) {
+        rePoint.push({
+          x: Math.round(pathInfo[1].path[i].x * magnification),
+          y: Math.round(pathInfo[1].path[i].y * magnification),
+        });
+      }
+
+      drawLine();
+    }
+  };
+
+  useEffect(() => {
+    initCanvas();
+  }, []);
+
   const drawLine = () => {
     const canvas: HTMLCanvasElement | null = document.querySelector("#canvas");
-    const ctx = canvas?.getContext("2d");
+    const ctx = canvas?.getContext("2d");;
 
-    if (ctx) {
-      ctx.strokeStyle = "red";  // 선 색깔
+    if( ctx ) {
+      ctx.strokeStyle = "red";
       ctx.lineCap = "square";
-      ctx.lineJoin = "round";	// 선 끄트머리(?)
-      ctx.lineWidth = 3;		// 선 굵기
+      ctx.lineJoin = "round";
+      ctx.lineWidth = 2;
 
       if( i >= rePoint.length-1 ) {
         ctx.beginPath();
@@ -124,57 +166,16 @@ const FindRoute = () => {
     }
   };
 
-  useEffect(() => {
-    const canvas = document.querySelector(".canvas-layout");
-    width = document.querySelector(".image")?.clientWidth;
-
-    if( width && canvas ) {
-      canvas.innerHTML += `
-        <canvas 
-          id="canvas"
-          width=${width} 
-          height=${width} 
-          style="
-          position: relative; z-index: 1000;
-          max-width: 1000px;
-          max-height: 1000px;
-        ">
-        </canvas>
-      `;
-
-      if( width < 1000 ) {
-        console.log((width / 1000).toFixed(2));
-        console.log(Math.round(width / 1000));
-
-        const magnification = Number((width / 1000).toFixed(2));
-
-
-        for(let i=0; i<route.length; i++) {
-          rePoint.push({
-            x: Math.round(route[i].position_x * magnification),
-            y: Math.round(route[i].position_y * magnification),
-          });
-        }
-      }
-
-      drawLine();
-    }
-  }, []);
-
   return (
     <Layout>
       <Header text="위치안내" />
       <Canvas className="canvas-layout"></Canvas>
-      {/* <ProgressiveImage 
-        src={require("../assets/imgs/img_B1.png")}
-        placeholder={require("../assets/imgs/move_floor.png")}
-        delay={2}
-      /> */}
       <ParkingImage
+        id="image"
         className="image"
-        src={require("../../assets/imgs/img_B1.png")}
+        src={imgPath}
       />
-      <Footer text="주차정보" prev="info" />
+      <Footer text="주차정보" prev="kiosk/info" />
     </Layout>
   );
 };

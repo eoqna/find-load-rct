@@ -3,15 +3,8 @@ import styled from "styled-components";
 import useDataStore from "../store/useDataStore";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
-
-const Layout = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-`;
+import { useEffect } from "react";
+import { Layout } from "../utils/styles/Common";
 
 const Title = styled.h2`
   margin-bottom: 6vh;
@@ -34,38 +27,60 @@ const CarListLayout = styled.div`
 `;
 
 const CarImage = styled.img`
-  width: 50%;
+  width: 30%;
   height: 100%;
+
+  @media (max-width: 800px) {
+    width: 40%;
+  }
 `;
 
 const CarInfo = styled.div`
-  width: 50%;
-  display: flex;
-  flex-direction: column;
+  width: 70%;
+  height: 100%;
   margin-left: 10px;
+
+  @media (max-width: 800px) {
+    width: 60%;
+  }
 `;
 
 const Label = styled.p`
-  padding: 0;
-  margin: 0;
+  height: 25%;
+  display: flex;
+  align-items: center;
   font-size: 1rem;
+  font-weight: bold;
+  margin: 0 0 0 3px;
 `;
 
 const Text = styled.p`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100%;
-  padding: 0;
-  margin: 5px 0 10px;
+  height: 25%;
+  margin: 0;
   border-radius: 5px;
   color: #fff;
-  text-align: center;
   background: #006eb6;
   font-weight: 500;
   font-size: 1.2rem;
+
+  @media (max-width: 800px) {
+    font-size: 1rem;
+  }
 `;
 
 const SelectCar = () => {
   const navigation = useNavigate();
   const { carList, setSelectCar } = useDataStore();
+
+  useEffect(() => {
+    if( carList.length < 0 ) {
+      navigation("/");
+    }
+  })
 
   const onSelectCarNumber = (item: ApiResponse.CarState) => {
     setSelectCar(item);
@@ -79,33 +94,19 @@ const SelectCar = () => {
       {
         carList.map((item, index) => {
           return (
-            <CarListLayout
-              key={index}
-              onClick={() => onSelectCarNumber(item)}
-            >
-              <CarImage
-                src={require("../assets/imgs/testcar.jpg")}
-                alt="차량 이미지"
-              />
+            <CarListLayout key={index} onClick={() => onSelectCarNumber(item)}>
+              <CarImage src={item.img_path} alt="차량 이미지" />
               <CarInfo>
-                <Label>
-                  차량번호
-                </Label>
-                <Text>
-                  {item.car_num}
-                </Text>
-                <Label>
-                  입차시간
-                </Label>
-                <Text>
-                  {item.in_dtm}
-                </Text>
+                <Label>차량번호</Label>
+                <Text>{item.car_num}</Text>
+                <Label>입차시간</Label>
+                <Text>{item.in_dtm}</Text>
               </CarInfo>
             </CarListLayout>
           );
         })
       }
-      <Footer text="차량번호 입력" prev="input" />
+      <Footer text="차량번호 입력" prev="kiosk/input" />
     </Layout>
   )
 };

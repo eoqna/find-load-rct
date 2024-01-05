@@ -11,8 +11,10 @@ interface DataState {
   setCarList: (data: ApiResponse.CarState[]) => void;
   selectCar: ApiResponse.CarState;
   setSelectCar: (data: ApiResponse.CarState) => void;
-  route: ApiResponse.Route[];
-  setRoute: (data: ApiResponse.Route[]) => void;
+  pathInfo: ApiResponse.PathInfo[];
+  setPathInfo: (data: ApiResponse.PathInfo[]) => void;
+  myCarInfo: ApiResponse.CarState;
+  setMyCarInfo: (data: ApiResponse.CarState) => void;
 };
 
 const defaultKioskState: ApiResponse.KioskInfo = {
@@ -27,7 +29,20 @@ const defaultCarState: ApiResponse.CarState = {
   car_num: "",
   in_dtm: "",
   node_id: "",
+  position_x: 0,
+  position_y: 0,
 };
+
+const defaultMyCarInfo: ApiResponse.CarState = {
+  flor_nm: "",
+  img_path: "",
+  car_num: "",
+  in_dtm: "",
+  node_id: "",
+  flor_img_path: "",
+  position_x: 0,
+  position_y: 0,
+}
 
 const useDataStore = create<DataState>()((set) => ({
   platformWidth: 0,
@@ -40,8 +55,10 @@ const useDataStore = create<DataState>()((set) => ({
   setCarList: (data) => set({ carList: data }),
   selectCar: defaultCarState,
   setSelectCar: (data) => set({ selectCar: data }),
-  route: [],
-  setRoute: (data) => set({ route: data }),
+  pathInfo: [],
+  setPathInfo: (data) => set({ pathInfo: data }),
+  myCarInfo: defaultMyCarInfo,
+  setMyCarInfo: (data) => set({ myCarInfo: data }),
 }));
 
 export default useDataStore;
