@@ -1,12 +1,12 @@
 import styled from "styled-components";
-import Header from "../../components/Header";
-import Footer from "../../components/Footer";
-import useDataStore from "../../store/useDataStore";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+import useDataStore from "../store/useDataStore";
 import { useNavigate } from "react-router";
-import axiosClient from "../../utils/axiosClient";
-import { Layout } from "../../utils/styles/Common";
-import useAppStore from "../../store/useAppState";
-import { Colors } from "../../utils/colors";
+import axiosClient from "../utils/axiosClient";
+import { Layout } from "../utils/styles/Common";
+import useAppStore from "../store/useAppState";
+import { Colors } from "../utils/colors";
 
 const CarInfoLayout = styled.div`
   width: 80%;
@@ -84,28 +84,30 @@ const Button = styled.button`
 
 const ParkingInfo = () => {
   const { setModal } = useAppStore();
-  const { mobile, selectCar, setPathInfo, setMyCarInfo } = useDataStore();
+  const { mobile, selectCar, kiosk, setPathInfo, setMyCarInfo } = useDataStore();
   const navigation = useNavigate();
 
   const onClickFindRoute = async () => {
-    if( mobile ) {
-      const { data } = await axiosClient.post("/api/mobile/beta/parking/location", {
-        car_num: "30다1192",
-      });
+    // if( mobile ) {
+    //   const { data } = await axiosClient.post("/api/mobile/beta/parking/location", {
+    //     car_num: "30다1192",
+    //   });
 
-      if( data.code === "404" ) {
-        return setModal({ open: true, content: data.msg });
-      }
+    //   if( data.code === "404" ) {
+    //     return setModal({ open: true, content: data.msg });
+    //   }
 
-      setMyCarInfo(data.carInfo);
+    //   setMyCarInfo(data.carInfo);
 
-      return navigation("/mobile/find");
-    }
+    //   return navigation("/mobile/find");
+    // }
 
     const { data } = await axiosClient.post("/api/kiosk/beta/parking/find-route", {
-      start_node: "K30001",
+      start_node: kiosk.node_id,
       end_node: selectCar.node_id,
     });
+
+    console.log(data);
 
     if( data.code === "404" ) {
       return setModal({ open: true, content: data.msg });

@@ -2,6 +2,7 @@ import styled from "styled-components";
 import Icon from '@mdi/react';
 import { mdiChevronLeft, mdiHome } from '@mdi/js';
 import { useNavigate } from "react-router";
+import useDataStore from "../store/useDataStore";
 
 const Layout = styled.div`
   display: flex;
@@ -38,6 +39,7 @@ interface HeaderProps {
 
 const Footer = (props: HeaderProps) => {
   const { prev, text } = props;
+  const { mobile } = useDataStore();
   const navigation = useNavigate();
 
   const onClickPrev = () => {
@@ -45,7 +47,11 @@ const Footer = (props: HeaderProps) => {
   };
 
   const onClickMain = () => {
-    navigation(`/`);
+    if ( mobile ) {
+      return navigation("/kiosk/floor");
+    }
+
+    navigation("/");
   };
 
   return (

@@ -1,15 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import useDataStore from "../../store/useDataStore";
-import { numbers } from "../../utils/temp";
+import useDataStore from "../store/useDataStore";
+import { numbers } from "../utils/temp";
 import Icon from '@mdi/react';
 import { mdiCloseBox } from '@mdi/js';
-import Footer from "../../components/Footer";
-import Header from "../../components/Header";
-import axiosClient from "../../utils/axiosClient";
-import useAppStore from "../../store/useAppState";
-import { Layout } from "../../utils/styles/Common";
+import Footer from "../components/Footer";
+import Header from "../components/Header";
+import axiosClient from "../utils/axiosClient";
+import useAppStore from "../store/useAppState";
+import { Layout } from "../utils/styles/Common";
 
 const Title = styled.h2`
   padding: 0;
@@ -36,6 +36,10 @@ const Input = styled.input`
   cursor: default;
   
   @media (max-width: 800px) {
+    width: 14%;
+  }
+
+  @media (max-width: 360px) {
     width: 20%;
   }
 `;
@@ -68,8 +72,12 @@ const InputCarNumber = () => {
   const [ fourth, setFourth ] = useState("");
   const [ carNumber, setCarNumber ] = useState("");
   const { setModal } = useAppStore();
-  const { setCarList } = useDataStore();
+  const { mobile, setCarList } = useDataStore();
   const navigation = useNavigate();
+
+  useEffect(() => {
+    if( mobile ) return navigation("/kiosk/floor");
+  }, []);
   
   const init = () => {
     setFirst("");
@@ -156,7 +164,7 @@ const InputCarNumber = () => {
 
     setCarList(data.list);
 
-    navigation("/select");
+    navigation("/kiosk/select");
   }
 
   return (

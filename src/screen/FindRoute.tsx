@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import Header from "../../components/Header";
-import Footer from "../../components/Footer";
-import useDataStore from "../../store/useDataStore";
-import { Layout } from "../../utils/styles/Common";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+import useDataStore from "../store/useDataStore";
+import { Layout } from "../utils/styles/Common";
 import { useNavigate } from "react-router";
 import moment from "moment";
 let width: number | undefined;
@@ -56,14 +56,12 @@ const FindRoute = () => {
         "></canvas>
       `;
 
-      setImgPath(pathInfo[1].canvas_img);
-
-      console.log(pathInfo[1].path);
+      setImgPath(pathInfo[0].canvas_img);
     
-      for(let i=0; i<pathInfo[1].path.length; i++) {
+      for(let i=0; i<pathInfo[0].path.length; i++) {
         rePoint.push({
-          x: Math.round(pathInfo[1].path[i].x * magnification),
-          y: Math.round(pathInfo[1].path[i].y * magnification),
+          x: Math.round(pathInfo[0].path[i].x * magnification),
+          y: Math.round(pathInfo[0  ].path[i].y * magnification),
         });
       }
 
