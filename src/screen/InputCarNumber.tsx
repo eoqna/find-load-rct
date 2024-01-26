@@ -179,30 +179,31 @@ const InputCarNumber = () => {
       </InputLayout>
       <NumberPadLayout>
         {numbers.map((item) => {
-            if( item === 10 ) {
-              return(
+          return (
+            item === 10 ?
+              (
                 <NumberPad
                   key={item}
                   onClick={onClickCancel}
                 >
                   <Icon path={mdiCloseBox} size={1} color="#006eb6" />
                 </NumberPad>
-              );
-            } else if ( item === 11 ) {
-              return (
-                <NumberPad 
-                  key={item}
-                  style={{background: "#006eb6", color: "#fff", border: 0}}
-                  onClick={onSubmit}
-                >
-                  확인
-                </NumberPad>
-              );
-            } else {
-              return(
-                <NumberPad key={item} onClick={(e) => onClickNumber(e.currentTarget.innerHTML)}>{item}</NumberPad>
-              );
-            }
+              )
+                :
+              ( item === 11 ?
+                  (
+                    <NumberPad 
+                      key={item}
+                      style={{background: "#006eb6", color: "#fff", border: 0}}
+                      onClick={onSubmit}
+                    >
+                      확인
+                    </NumberPad>
+                  )
+                :
+                  <NumberPad key={item} onClick={(e) => onClickNumber(e.currentTarget.innerHTML)}>{item}</NumberPad>
+              )
+          );
           })}
       </NumberPadLayout>
       <Footer />
