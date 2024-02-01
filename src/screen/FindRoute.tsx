@@ -5,7 +5,6 @@ import Footer from "../components/Footer";
 import useDataStore from "../store/useDataStore";
 import { Layout } from "../utils/styles/Common";
 import { useNavigate } from "react-router";
-import moment from "moment";
 let width: number | undefined;
 let cvs: Element | null;
 
@@ -61,7 +60,7 @@ const FindRoute = () => {
       for(let i=0; i<pathInfo[0].path.length; i++) {
         rePoint.push({
           x: Math.round(pathInfo[0].path[i].x * magnification),
-          y: Math.round(pathInfo[0  ].path[i].y * magnification),
+          y: Math.round(pathInfo[0].path[i].y * magnification),
         });
       }
 
@@ -166,14 +165,14 @@ const FindRoute = () => {
 
   return (
     <Layout>
-      <Header text="위치안내" />
+      <Header text="위치안내" /> 
       <Canvas className="canvas-layout"></Canvas>
       <ParkingImage
         id="image"
         className="image"
         src={imgPath}
       />
-      <Footer text="주차정보" prev="kiosk/info" />
+      <Footer text="주차정보" prev="/kiosk/info" />
     </Layout>
   );
 };

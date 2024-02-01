@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter } from 'react-router-dom';
-import './App.css';
-import Navigation from './screen/Navigation';
+import Navigations from './navigation/Navigations';
 import Modal from './screen/Modal';
-import useAppStore from './store/useAppState';
+import useAppStore from './store/useAppStore';
 
 const App = () => {
   const { modal, setModal } = useAppStore();
@@ -23,7 +22,7 @@ const App = () => {
   return (
     <BrowserRouter>
       { modal.open && <Modal /> }
-      <Navigation />
+      <Navigations />
     </BrowserRouter>
   );
 }

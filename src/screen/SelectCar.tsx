@@ -106,7 +106,7 @@ const SelectCar = () => {
           );
         })
       }
-      <Footer text="차량번호 입력" prev="kiosk/input" />
+      <Footer text="차량번호 입력" prev="/kiosk/input" />
     </Layout>
   )
 };

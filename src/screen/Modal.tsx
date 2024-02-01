@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import useAppStore from "../store/useAppState";
+import useAppStore from "../store/useAppStore";
 
 const BackgroundLayout = styled.div`
   width: 100%;
@@ -14,15 +14,15 @@ const BackgroundLayout = styled.div`
 `;
 
 const Content = styled.div`
-  width: 40%;
+  width: 70%;
   text-align: center;
   background: white;
   border: 0 solid #fff;
   border-radius: 5px;
-  font-size: 2vw;
+  font-size: 3.5vw;
+  font-weight: bold;
   padding: 60px 0;
   color: rgba(0, 0, 0, 0.7);
-  font-weight: bold;
 `;
 
 const Modal = () => {

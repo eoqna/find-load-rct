@@ -5,8 +5,9 @@ import useDataStore from "../store/useDataStore";
 import { useNavigate } from "react-router";
 import axiosClient from "../utils/axiosClient";
 import { Layout } from "../utils/styles/Common";
-import useAppStore from "../store/useAppState";
+import useAppStore from "../store/useAppStore";
 import { Colors } from "../utils/colors";
+import { useEffect } from "react";
 
 const CarInfoLayout = styled.div`
   width: 80%;
@@ -17,7 +18,6 @@ const CarInfoLayout = styled.div`
   border-radius: 5px;
   padding: 10px;
   align-items: center;
-  justify-content: space-around;
   margin-bottom: 10px;
 `;
 
@@ -30,7 +30,7 @@ const CarInfo = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  margin-top: 10px;
+  margin-top: 5vh;
 `;
 
 const TextLayout = styled.div`
@@ -43,13 +43,13 @@ const TextLayout = styled.div`
 const Label = styled.p`
   padding: 0;
   margin: 0;
-  width: 20%;
+  width: 30%;
   font-weight: bold;
-  font-size: 1rem;
+  font-size: 1.8vh;
 `;
 
 const Text = styled.p`
-  width: 70%;
+  width: 60%;
   padding: 5px 0;
   margin: 5px 0 10px;
   border-radius: 5px;
@@ -57,12 +57,12 @@ const Text = styled.p`
   text-align: center;
   background: #006eb6;
   font-weight: 500;
-  font-size: 1.2rem;
+  font-size: 1.8vh;
 `;
 
 const ButtonLayout = styled.div`
   display: flex;
-  width: 80%;
+  width: calc(80% + 20px);
   height: 10%;
   flex-direction: row;
   align-items: center;
@@ -70,11 +70,11 @@ const ButtonLayout = styled.div`
 `;
 
 const Button = styled.button`
-  width: 45%;
+  width: 48%;
   height: 100%;
   margin: 0;
   padding: 0;
-  font-size: 3vw;
+  font-size: 2vh;
   font-weight: bold;
   color: ${Colors.White};
   background: ${Colors.Primary};
@@ -84,8 +84,14 @@ const Button = styled.button`
 
 const ParkingInfo = () => {
   const { setModal } = useAppStore();
-  const { mobile, selectCar, kiosk, setPathInfo, setMyCarInfo } = useDataStore();
+  const { selectCar, kiosk, setPathInfo } = useDataStore();
   const navigation = useNavigate();
+
+  useEffect(() => {
+    if( !kiosk.node_id || !selectCar ) {
+      return navigation("/");
+    }
+  }, []);
 
   const onClickFindRoute = async () => {
     // if( mobile ) {
@@ -106,8 +112,6 @@ const ParkingInfo = () => {
       start_node: kiosk.node_id,
       end_node: selectCar.node_id,
     });
-
-    console.log(data);
 
     if( data.code === "404" ) {
       return setModal({ open: true, content: data.msg });
@@ -150,7 +154,7 @@ const ParkingInfo = () => {
         <Button>위치출력</Button>
         <Button onClick={onClickFindRoute}>위치안내</Button>
       </ButtonLayout>
-      <Footer text="차량선택" prev="select" />
+      <Footer text="차량선택" prev="/kiosk/select" />
     </Layout>
   );
 };

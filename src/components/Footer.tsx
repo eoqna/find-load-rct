@@ -43,14 +43,10 @@ const Footer = (props: HeaderProps) => {
   const navigation = useNavigate();
 
   const onClickPrev = () => {
-    navigation(`/${prev}`);
+    navigation(`${prev}`);
   };
 
   const onClickMain = () => {
-    if ( mobile ) {
-      return navigation("/kiosk/floor");
-    }
-
     navigation("/");
   };
 

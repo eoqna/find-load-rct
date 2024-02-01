@@ -1,14 +1,14 @@
 import { Route, Routes } from "react-router";
 import styled from "styled-components";
-import InputCarNumber from "./InputCarNumber";
-import SelectCar from "./SelectCar";
-import FindRoute from "./FindRoute";
-import Main from "./Main";
-import ParkingInfo from "./ParkingInfo";
+import InputCarNumber from "../screen/InputCarNumber";
+import SelectCar from "../screen/SelectCar";
+import FindRoute from "../screen/FindRoute";
+import Main from "../screen/Main";
+import ParkingInfo from "../screen/ParkingInfo";
 import Footer from "../components/Footer";
-import FindMyCar from "./mobile/FindMyCar";
+import FindMyCar from "../screen/mobile/FindMyCar";
 import { Colors } from "../utils/colors";
-import InputKioskInfo from "./InputKioskInfo";
+import InputKioskInfo from "../screen/InputKioskInfo";
 
 const Layout = styled.div`
   width: 100vw;
@@ -16,7 +16,7 @@ const Layout = styled.div`
   background: ${Colors.Background};
 `;
 
-const Navigation = () => {
+const Navigations = () => {
   return (
     <Layout className="main" >
       <Routes>
@@ -33,4 +33,4 @@ const Navigation = () => {
   );
 }
 
-export default Navigation;
+export default Navigations;

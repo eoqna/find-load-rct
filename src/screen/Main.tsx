@@ -100,6 +100,10 @@ const Main = () => {
   }, []);
 
   const onClickBackground = () => {
+    if( mobile ) {
+      return navigation("/kiosk/floor");
+    }
+    
     navigation("/kiosk/input");
   }
 

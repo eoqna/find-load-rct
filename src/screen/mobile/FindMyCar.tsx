@@ -84,7 +84,7 @@ const FindMyCar = () => {
         className="image"
         src={myCarInfo.flor_img_path}
       />
-      <Footer text="주차정보" prev="kiosk/info" />
+      <Footer text="주차정보" prev="/kiosk/info" />
     </Layout>
   );
 };

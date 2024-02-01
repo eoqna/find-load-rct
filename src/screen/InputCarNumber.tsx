@@ -8,20 +8,16 @@ import { mdiCloseBox } from '@mdi/js';
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import axiosClient from "../utils/axiosClient";
-import useAppStore from "../store/useAppState";
+import useAppStore from "../store/useAppStore";
 import { Layout } from "../utils/styles/Common";
+import { InputLayout, NumberPad, NumberPadLayout } from "../utils/styles/NumberPad";
 
 const Title = styled.h2`
   padding: 0;
   font-size: 4.5vw;
   font-weight: 100;
   color: #fff;
-  margin-bottom: 6vh;
-`;
-
-const InputLayout = styled.div`
-  width: 100%;
-  text-align: center;
+  margin-bottom: 4vh;
 `;
 
 const Input = styled.input`
@@ -34,35 +30,6 @@ const Input = styled.input`
   text-align: center;
   outline: none;
   cursor: default;
-  
-  @media (max-width: 800px) {
-    width: 14%;
-  }
-
-  @media (max-width: 360px) {
-    width: 20%;
-  }
-`;
-
-const NumberPadLayout = styled.div`
-  width: 100%;
-  text-align: center;
-  margin-top: 5px;
-`;
-
-const NumberPad = styled.button`
-  width: 30%;
-  margin: 5px;
-  height: 8vh;
-  text-align: center;
-  background: #fff;
-  color: rgba(0, 0, 0, 0.6);
-  font-size: 1.5rem;
-  font-weight: bold;
-  border: 0 solid #fff;
-  border-radius: 5px;
-  cursor: pointer;
-  outline: none;
 `;
 
 const InputCarNumber = () => {
@@ -72,12 +39,14 @@ const InputCarNumber = () => {
   const [ fourth, setFourth ] = useState("");
   const [ carNumber, setCarNumber ] = useState("");
   const { setModal } = useAppStore();
-  const { mobile, setCarList } = useDataStore();
+  const { kiosk, mobile, setCarList } = useDataStore();
   const navigation = useNavigate();
 
   useEffect(() => {
-    if( mobile ) return navigation("/kiosk/floor");
-  }, []);
+    if( mobile && !kiosk.node_id ) {
+      return navigation("/");
+    }
+  }, [mobile, kiosk, navigation]);
   
   const init = () => {
     setFirst("");
@@ -148,7 +117,7 @@ const InputCarNumber = () => {
 
   const onSubmit = async () => {
     if( carNumber.length !== 4) {
-      return alert("차량 번호 4자리를 입력해 주세요.");
+      return setModal({ open: true, content: "차량번호 4자리를 입력해 주세요." });
     }
 
     const { data } = await axiosClient.post("/api/kiosk/beta/parking/car-list", {
@@ -157,7 +126,7 @@ const InputCarNumber = () => {
 
     if( data.code === "404" ) {
       init();
-      return setModal({ open: true, content: data.msg })
+      return setModal({ open: true, content: data.msg });
     }
 
     parseStringToDate(data.list);
@@ -172,10 +141,10 @@ const InputCarNumber = () => {
       <Header text="차량번호 입력" />
       <Title>차량번호 뒤의 4자리를 입력해 주세요.</Title>
       <InputLayout>
-        <Input type="text" readOnly maxLength={1} value={first} />
+        <Input type="text" readOnly maxLength={1} value={first} style={{marginLeft: 0}} />
         <Input type="text" readOnly maxLength={1} value={second} />
         <Input type="text" readOnly maxLength={1} value={third} />
-        <Input type="text" readOnly maxLength={1} value={fourth} />
+        <Input type="text" readOnly maxLength={1} value={fourth} style={{marginRight: 0}} />
       </InputLayout>
       <NumberPadLayout>
         {numbers.map((item) => {
@@ -206,7 +175,11 @@ const InputCarNumber = () => {
           );
           })}
       </NumberPadLayout>
-      <Footer />
+      {mobile ?
+        <Footer text="키오스크 선택" prev="/kiosk/floor"/>
+          :
+        <Footer />
+      }
     </Layout>
   );
 };
