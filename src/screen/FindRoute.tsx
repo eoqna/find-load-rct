@@ -5,6 +5,7 @@ import Footer from "../components/Footer";
 import useDataStore from "../store/useDataStore";
 import { Layout } from "../utils/styles/Common";
 import { useNavigate } from "react-router";
+import wattingImage from "../assets/imgs/buffering.gif";
 let width: number | undefined;
 let cvs: Element | null;
 
@@ -26,7 +27,8 @@ const FindRoute = () => {
   const [ imgPath, setImgPath ] = useState("");
   let z = 0;
   let i = 0;
-  const drawSpeed = 1;
+  let idx = 0;
+  const drawSpeed = 10;
   const rePoint: PointProps[] = [];
 
   useEffect(() => {
@@ -40,8 +42,6 @@ const FindRoute = () => {
     width = document.querySelector(".image")?.clientWidth;
 
     if( cvs && width ) {
-      const magnification =  Number((width / 4000));
-
       cvs.innerHTML += `
         <canvas 
           id="canvas"
@@ -50,19 +50,12 @@ const FindRoute = () => {
           style="
             position: relative;
             z-index: 1000;
-            max-width: 1000px;
-            max-height: 1000px;
         "></canvas>
       `;
 
       setImgPath(pathInfo[0].canvas_img);
     
-      for(let i=0; i<pathInfo[0].path.length; i++) {
-        rePoint.push({
-          x: Math.round(pathInfo[0].path[i].x * magnification),
-          y: Math.round(pathInfo[0].path[i].y * magnification),
-        });
-      }
+      settingPoint(idx, width);  
 
       drawLine();
     }
@@ -71,6 +64,21 @@ const FindRoute = () => {
   useEffect(() => {
     initCanvas();
   }, []);
+
+  const settingPoint = (index: number, wd: number) => {
+    const magnification =  Number((wd / 4000));
+
+    if( rePoint.length > 0 ) {
+      rePoint.splice(0, rePoint.length);
+    }
+
+    for(let j=0; j < pathInfo[index].path.length; j++) {
+      rePoint.push({
+        x: Math.round(pathInfo[index].path[j].x * magnification),
+        y: Math.round(pathInfo[index].path[j].y * magnification),
+      });
+    }
+  }
 
   const drawLine = () => {
     const canvas: HTMLCanvasElement | null = document.querySelector("#canvas");
@@ -82,9 +90,28 @@ const FindRoute = () => {
       ctx.lineJoin = "round";
       ctx.lineWidth = 2;
 
-      if( i >= rePoint.length-1 ) {
+      if( i >= rePoint.length - 1 ) {
         ctx.beginPath();
-        return;
+
+        if( idx !== pathInfo.length - 1 ) {
+          i = 0;
+          idx += 1;
+
+          setTimeout(() => {
+            ctx.clearRect(0, 0, 4000, 4000);
+
+            setImgPath(wattingImage);
+            settingPoint(idx, Number(width));
+          }, 2000);
+          
+          setTimeout(() => {
+            setImgPath(pathInfo[idx].canvas_img);
+            
+            drawLine();
+          }, 5000);
+        } else {
+          return;
+        }
       }
 
       if( i === 0 ) {

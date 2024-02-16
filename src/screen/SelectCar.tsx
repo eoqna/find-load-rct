@@ -28,7 +28,6 @@ const CarListLayout = styled.div`
 
 const CarImage = styled.img`
   width: 30%;
-  height: 100%;
 
   @media (max-width: 800px) {
     width: 40%;

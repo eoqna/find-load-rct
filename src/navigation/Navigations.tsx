@@ -6,9 +6,9 @@ import FindRoute from "../screen/FindRoute";
 import Main from "../screen/Main";
 import ParkingInfo from "../screen/ParkingInfo";
 import Footer from "../components/Footer";
-import FindMyCar from "../screen/mobile/FindMyCar";
 import { Colors } from "../utils/colors";
 import InputKioskInfo from "../screen/InputKioskInfo";
+import KioskInfo from "../screen/KioskInfo";
 
 const Layout = styled.div`
   width: 100vw;
@@ -26,7 +26,7 @@ const Navigations = () => {
         <Route path="/kiosk/select" element={<SelectCar />} />
         <Route path="/kiosk/info" element={<ParkingInfo />} />
         <Route path="/kiosk/route" element={<FindRoute />} />
-        <Route path="/mobile/find" element={<FindMyCar />} />
+        <Route path="/test" element={<KioskInfo />} />
         <Route path="/common/footer" element={<Footer />} />
       </Routes>
     </Layout>

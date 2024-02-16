@@ -39,7 +39,6 @@ interface HeaderProps {
 
 const Footer = (props: HeaderProps) => {
   const { prev, text } = props;
-  const { mobile } = useDataStore();
   const navigation = useNavigate();
 
   const onClickPrev = () => {

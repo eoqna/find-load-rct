@@ -128,7 +128,7 @@ const InputCarNumber = () => {
       init();
       return setModal({ open: true, content: data.msg });
     }
-
+    
     parseStringToDate(data.list);
 
     setCarList(data.list);

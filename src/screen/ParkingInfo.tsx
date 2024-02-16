@@ -109,10 +109,11 @@ const ParkingInfo = () => {
     // }
 
     const { data } = await axiosClient.post("/api/kiosk/beta/parking/find-route", {
+      rotate: 180,
       start_node: kiosk.node_id,
       end_node: selectCar.node_id,
     });
-
+    
     if( data.code === "404" ) {
       return setModal({ open: true, content: data.msg });
     }
