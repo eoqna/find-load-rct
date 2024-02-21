@@ -26,22 +26,21 @@ const CarListLayout = styled.div`
   border-radius: 5px;
 `;
 
-const CarImage = styled.img`
-  width: 30%;
+const CarImageLayout = styled.div`
+  width: 40%;
+  height: 100%;
+`;
 
-  @media (max-width: 800px) {
-    width: 40%;
-  }
+const CarImage = styled.img`
+  width: 100%;
+  height: 100%;
 `;
 
 const CarInfo = styled.div`
-  width: 70%;
+  width: 60%;
   height: 100%;
   margin-left: 10px;
 
-  @media (max-width: 800px) {
-    width: 60%;
-  }
 `;
 
 const Label = styled.p`
@@ -94,7 +93,9 @@ const SelectCar = () => {
         carList.map((item, index) => {
           return (
             <CarListLayout key={index} onClick={() => onSelectCarNumber(item)}>
-              <CarImage src={item.img_path} alt="차량 이미지" />
+              <CarImageLayout>
+                <CarImage src={item.img_path} alt="차량 이미지" />
+              </CarImageLayout>
               <CarInfo>
                 <Label>차량번호</Label>
                 <Text>{item.car_num}</Text>

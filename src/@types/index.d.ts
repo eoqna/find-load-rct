@@ -18,7 +18,7 @@ declare namespace ApiResponse {
 
   interface PathInfo {
     canvas_img: string;
-    canvas: { x: number, y: number };
+    canvas: { width: number, height: number };
     path: Path[];
   }
 

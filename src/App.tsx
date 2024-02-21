@@ -7,6 +7,15 @@ import useAppStore from './store/useAppStore';
 const App = () => {
   const { modal, setModal } = useAppStore();
 
+  function setScreenSize() {
+    let vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty("--vh", `${vh}px`);
+  };
+
+  useEffect(() => {
+    setScreenSize();
+  });
+
   useEffect(() => {
     if( modal.open ) {
       const timeout = setTimeout(() => {

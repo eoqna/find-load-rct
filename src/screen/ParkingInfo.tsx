@@ -94,22 +94,8 @@ const ParkingInfo = () => {
   }, []);
 
   const onClickFindRoute = async () => {
-    // if( mobile ) {
-    //   const { data } = await axiosClient.post("/api/mobile/beta/parking/location", {
-    //     car_num: "30다1192",
-    //   });
-
-    //   if( data.code === "404" ) {
-    //     return setModal({ open: true, content: data.msg });
-    //   }
-
-    //   setMyCarInfo(data.carInfo);
-
-    //   return navigation("/mobile/find");
-    // }
-
     const { data } = await axiosClient.post("/api/kiosk/beta/parking/find-route", {
-      rotate: 180,
+      rotate: 0,
       start_node: kiosk.node_id,
       end_node: selectCar.node_id,
     });
