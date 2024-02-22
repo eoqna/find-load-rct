@@ -8,7 +8,8 @@ import { useNavigate } from "react-router";
 import Lottie from "lottie-react";
 import LottieData from "../assets/lottie/loading.json";
 import marker from "../assets/imgs/parking_mark.png";
-let width: number | undefined;
+import { Colors } from "../utils/colors";
+let width: number;
 let cvs: Element | null;
 let idx = 0;
 
@@ -47,7 +48,7 @@ interface PointProps {
   y: number;
 };
 
-type ImageState = "first" | "waitting" | "second" | "end" | "";
+type ImageState = "first" | "waitting" | "second" | "";
 
 const FindRoute = () => {
   const { pathInfo } = useDataStore();
@@ -57,9 +58,8 @@ const FindRoute = () => {
   const [ rePoint, setRePoint ] = useState<PointProps[]>([]);
   const [ imgState, setImgState ] = useState<ImageState>("");
   const [ markerPosition, setMarkerPosition ] = useState<PointProps>({x: 0, y: 0});
-  let z = 0;
   let i = 0;
-  const drawSpeed = 10;
+  let raf: number;
 
   useEffect(() => {
     if( pathInfo.length < 1 ) {
@@ -67,9 +67,9 @@ const FindRoute = () => {
     }
   }, [pathInfo, navigation]);
 
-  const initCanvas = () => {
+  const init = () => {
     cvs = document.querySelector(".canvas-layout");
-    width = document.querySelector(".image")?.clientWidth;
+    width = document.querySelector(".image")?.clientWidth as number;
 
     if( cvs && width ) {
       cvs.innerHTML += `
@@ -79,22 +79,18 @@ const FindRoute = () => {
           height=${width} 
           style="position: relative; z-index: 1000;"></canvas>
       `;
-      
-      console.log(pathInfo);
-
-      console.log(pathInfo[0].canvas_img.substring(pathInfo[0].canvas_img.lastIndexOf("/")).split("_")[1]);
 
       setImgState("first");
-      settingPoint(idx, width);
-      setImgPath(pathInfo[idx].canvas_img);
+      convertCoordinates(0, width);
+      setImgPath(pathInfo[0].canvas_img);
     }
   };
 
   useEffect(() => {
-    initCanvas();
+    init();
   }, []);
 
-  const settingPoint = (index: number, wd: number) => {
+  const convertCoordinates = (index: number, wd: number) => {
     const magnification =  Number((wd / pathInfo[0].canvas.width));
 
     if( rePoint.length > 0 ) {
@@ -116,127 +112,85 @@ const FindRoute = () => {
     }
   };
 
-  const drawLine = () => {
-    const canvas: HTMLCanvasElement | null = document.querySelector("#canvas");
+  const initDraw = () => {
+    const canvas = document.querySelector("#canvas") as HTMLCanvasElement;
     const ctx = canvas?.getContext("2d");
 
-    if( ctx ) {
-      ctx.strokeStyle = "red";
+    if (ctx) {
+      ctx.strokeStyle = Colors.Red;
       ctx.lineCap = "square";
       ctx.lineJoin = "round";
       ctx.lineWidth = 2;
 
-      if( i === 0 ) {
+      if (i < 1) {
         ctx.beginPath();
         ctx.moveTo(rePoint[i].x, rePoint[i].y);
       }
 
-      if( i >= rePoint.length-1 ) {
-        ctx.beginPath();
-        idx += 1;
+      if (i >= rePoint.length-1) {
+        cancelAnimationFrame(raf);
+        idx++;
+        console.log(idx);
 
-        if( idx === pathInfo.length ) {
-          const img: any = document?.getElementById("img");
-          
+        if (idx >= pathInfo.length) {
+          const img = document?.getElementById("img") as HTMLImageElement;
           ctx.drawImage(img, markerPosition.x, markerPosition.y, 10, 10);
-
           idx = 0;
+          return;
+
+        } else {
+          i=0;
+
+          ctx.clearRect(0, 0, 4000, 4000);
+          setImgState("waitting");
+          setImgPath(pathInfo[1].canvas_img);
+          convertCoordinates(1, Number(width));
+
           return;
         }
 
-        if( idx < pathInfo.length ) {
-          i = 0;
-          
-          const timer = setTimeout(() => {
-            setImgState("waitting");
-            ctx.clearRect(0, 0, 4000, 4000);
-
-            setImgPath(pathInfo[idx].canvas_img);
-            settingPoint(idx, Number(width));
-            
-            clearTimeout(timer);
-          }, 2000);
-        }
       } else {
-        if( rePoint[i].x !== rePoint[i+1].x && rePoint[i].y !== rePoint[i+1].y ) {
-          ctx.lineTo(rePoint[i+1].x, rePoint[i+1].y);
-          ctx.stroke();
-          i++;
-          drawLine();
-  
-        } else {
-          const interval = setInterval(() => {
-            if( rePoint[i+1].x > rePoint[i].x ) {
-              const maxX = rePoint[i+1].x - rePoint[i].x;
-              
-              if( z >= maxX ) {
-                z = 0;
-                i++;
-                clearInterval(interval);
-                drawLine();
-              }
-    
-              ctx.lineTo(rePoint[i].x + z, rePoint[i].y);
-              ctx.stroke();
-              z += 1;
-    
-            } else if( rePoint[i].x > rePoint[i+1].x ) {
-              const maxX = rePoint[i].x - rePoint[i+1].x;
-              
-              if( z >= maxX ) {
-                z = 0;
-                i++;
-                clearInterval(interval);
-                drawLine();
-              }
-              
-              ctx.lineTo(rePoint[i].x - z, rePoint[i].y);
-              ctx.stroke();
-              z += 1;
-    
-            } else if( rePoint[i+1].y > rePoint[i].y ) {
-              const maxY = rePoint[i+1].y - rePoint[i].y;
-    
-              if( z >= maxY ) {
-                z = 0;
-                i++;
-                clearInterval(interval);
-                drawLine();
-              }
-  
-              ctx.lineTo(rePoint[i].x, rePoint[i].y + z);
-              ctx.stroke();
-              
-              z += 1;
-    
-            } else if( rePoint[i].y > rePoint[i+1].y ) {
-              const maxY = rePoint[i].y - rePoint[i+1].y;
-    
-              if( z >= maxY ) {
-                z = 0;
-                i++;
-                clearInterval(interval);
-                drawLine();
-              }
-  
-              ctx.lineTo(rePoint[i].x, rePoint[i].y - z);
-              ctx.stroke();
-              
-              z += 1;
-            }
-          }, drawSpeed);
-        }
+        ctx.lineTo(rePoint[i+1].x, rePoint[i+1].y);
+        ctx.stroke();
+        i++;
       }
+
+      raf = requestAnimationFrame(initDraw);
     }
   };
 
+  // const switchDrawLine = (ctx: CanvasRenderingContext2D) => {
+  //   if (rePoint[i+1].x > rePoint[i].x) {
+  //     drawLine(ctx, rePoint[i+1].x - rePoint[i].x, rePoint[i].x+z, rePoint[i].y);
+
+  //   } else if (rePoint[i].x > rePoint[i+1].x) {
+  //     drawLine(ctx, rePoint[i].x - rePoint[i+1].x, rePoint[i].x-z, rePoint[i].y);
+
+  //   } else if (rePoint[i+1].y > rePoint[i].y) {
+  //     drawLine(ctx, rePoint[i+1].y - rePoint[i].y, rePoint[i].x, rePoint[i].y+z);
+
+  //   } else if (rePoint[i].y > rePoint[i+1].y) {
+  //     drawLine(ctx, rePoint[i].y - rePoint[i+1].y, rePoint[i].x, rePoint[i].y - z);
+  //   }
+  // };
+
+  // const drawLine = (ctx: CanvasRenderingContext2D, max: number, x: number, y: number) => {
+  //   if(z >= max) {
+  //     z=0;
+  //     i++;
+
+  //   } else {
+  //     ctx.lineTo(x, y);
+  //     ctx.stroke();
+  //     z+=1;
+  //   }
+  // };
+
   const onLoadBackgroundImage = () => {
     if ( rePoint ) {
-      drawLine();
-    } else {
-      settingPoint(idx, Number(width));
+      initDraw();
     }
-  }
+  };
 
   return (
     <Layout>
@@ -246,7 +200,7 @@ const FindRoute = () => {
         <LottieLayout>
           <LottieView
             ref={ref}
-            loop={1}
+            loop={2}
             animationData={LottieData}
             onLoopComplete={() => setImgState("second")}
           />

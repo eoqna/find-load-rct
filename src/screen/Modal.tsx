@@ -11,6 +11,7 @@ const BackgroundLayout = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 2000;
 `;
 
 const Content = styled.div`

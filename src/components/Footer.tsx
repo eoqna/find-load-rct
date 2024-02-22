@@ -2,7 +2,6 @@ import styled from "styled-components";
 import Icon from '@mdi/react';
 import { mdiChevronLeft, mdiHome } from '@mdi/js';
 import { useNavigate } from "react-router";
-import useDataStore from "../store/useDataStore";
 
 const Layout = styled.div`
   display: flex;
@@ -14,7 +13,7 @@ const Layout = styled.div`
   background: rgb(59, 58, 66);
   bottom: 0;
   left: 0;
-  z-index: 1000;
+  z-index: 100;
 `;
 
 const ButtonLayout = styled.div`

@@ -10,7 +10,7 @@ const Layout = styled.div`
   background: rgb(59, 58, 66);
   top: 0;
   left: 0;
-  z-index: 1000;
+  z-index: 100;
 `;
 
 const TextLayout = styled.div`

@@ -11,8 +11,6 @@ const KioskInfo = () => {
   const getImageFile = useCallback( async () => {
     const { data } = await axiosClient.post("/api/kiosk/beta/parking/kiosk-list");
 
-    console.log(data);
-
     setImages(data.list);
   }, []);
 
