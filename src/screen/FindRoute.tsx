@@ -7,7 +7,8 @@ import { Layout } from "../utils/styles/Common";
 import { useNavigate } from "react-router";
 import Lottie from "lottie-react";
 import LottieData from "../assets/lottie/loading.json";
-import marker from "../assets/imgs/parking_mark.png";
+import ParkingMark from "../assets/imgs/parking_marker.png";
+import LocationMark from "../assets/imgs/location_marker.png";
 import { Colors } from "../utils/colors";
 let width: number;
 let cvs: Element | null;
@@ -58,6 +59,8 @@ const FindRoute = () => {
   const [ rePoint, setRePoint ] = useState<PointProps[]>([]);
   const [ imgState, setImgState ] = useState<ImageState>("");
   const [ markerPosition, setMarkerPosition ] = useState<PointProps>({x: 0, y: 0});
+  const [ firstFloor, setFirstFloor ] = useState("");
+  const [ secondFloor, setSecondFloor ] = useState("");
   let i = 0;
   let raf: number;
 
@@ -80,6 +83,11 @@ const FindRoute = () => {
           style="position: relative; z-index: 1000;"></canvas>
       `;
 
+      if (pathInfo.length > 1) {
+        setSecondFloor(pathInfo[1].canvas_img.substring(pathInfo[1].canvas_img.lastIndexOf("/")).split("_")[1]);
+      }
+
+      setFirstFloor(pathInfo[0].canvas_img.substring(pathInfo[0].canvas_img.lastIndexOf("/")).split("_")[1]);
       setImgState("first");
       convertCoordinates(0, width);
       setImgPath(pathInfo[0].canvas_img);
@@ -112,7 +120,27 @@ const FindRoute = () => {
     }
   };
 
-  const initDraw = () => {
+  const tackLocationMarker = () => {
+    const canvas = document.querySelector("#canvas") as HTMLCanvasElement;
+    const ctx = canvas?.getContext("2d");
+
+    if (ctx) {
+      const img = document?.getElementById("location_img") as HTMLImageElement;
+      ctx.drawImage(img, markerPosition.x, markerPosition.y);
+      idx++;
+
+      const timer = setTimeout(() => {
+        ctx.clearRect(0, 0, 4000, 4000);
+        setImgState("waitting");
+        setImgPath(pathInfo[1].canvas_img);
+        convertCoordinates(1, Number(width));
+
+        clearTimeout(timer);
+      }, 2000);
+    }
+  };
+
+  const drawLine = () => {
     const canvas = document.querySelector("#canvas") as HTMLCanvasElement;
     const ctx = canvas?.getContext("2d");
 
@@ -129,25 +157,23 @@ const FindRoute = () => {
 
       if (i >= rePoint.length-1) {
         cancelAnimationFrame(raf);
-        idx++;
-        console.log(idx);
 
-        if (idx >= pathInfo.length) {
-          const img = document?.getElementById("img") as HTMLImageElement;
-          ctx.drawImage(img, markerPosition.x, markerPosition.y, 10, 10);
+        // if (idx >= pathInfo.length) {
+          const img = document?.getElementById("parking_img") as HTMLImageElement;
+          ctx.drawImage(img, markerPosition.x, markerPosition.y);
           idx = 0;
           return;
 
-        } else {
-          i=0;
+        // } else {
+        //   i=0;
 
-          ctx.clearRect(0, 0, 4000, 4000);
-          setImgState("waitting");
-          setImgPath(pathInfo[1].canvas_img);
-          convertCoordinates(1, Number(width));
+        //   ctx.clearRect(0, 0, 4000, 4000);
+        //   setImgState("waitting");
+        //   setImgPath(pathInfo[1].canvas_img);
+        //   convertCoordinates(1, Number(width));
 
-          return;
-        }
+        //   return;
+        // }
 
       } else {
         ctx.lineTo(rePoint[i+1].x, rePoint[i+1].y);
@@ -155,7 +181,7 @@ const FindRoute = () => {
         i++;
       }
 
-      raf = requestAnimationFrame(initDraw);
+      raf = requestAnimationFrame(drawLine);
     }
   };
 
@@ -187,9 +213,18 @@ const FindRoute = () => {
   // };
 
   const onLoadBackgroundImage = () => {
-    if ( rePoint ) {
-      initDraw();
+    if ( pathInfo.length <= 1 ) {
+      drawLine();
+    } else {
+      if ( idx === 0 ) {
+        tackLocationMarker();
+      } else {
+        drawLine();
+      }
     }
+    // if ( rePoint ) {
+    //   initDraw();
+    // }
   };
 
   return (
@@ -204,7 +239,7 @@ const FindRoute = () => {
             animationData={LottieData}
             onLoopComplete={() => setImgState("second")}
           />
-          <LottieText>층 이동중입니다</LottieText>
+          <LottieText>{firstFloor} → {secondFloor} 이동중</LottieText>
         </LottieLayout>
           :
         <ParkingImage
@@ -216,10 +251,12 @@ const FindRoute = () => {
       }
       <div style={{display: "none"}}>
         <img 
-          id="img" 
-          src={marker} 
-          width="10" 
-          height="10" 
+          id="parking_img" 
+          src={ParkingMark}
+        />
+        <img 
+          id="location_img" 
+          src={LocationMark}
         />
       </div>
       <Footer text="주차정보" prev="/kiosk/info" />

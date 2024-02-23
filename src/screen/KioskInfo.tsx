@@ -4,14 +4,14 @@ import axiosClient from "../utils/axiosClient";
 const KioskInfo = () => {
   const [ images, setImages ] = useState<any>();
 
-  useEffect(() => {
-    getImageFile();
-  }, []);
-
   const getImageFile = useCallback( async () => {
     const { data } = await axiosClient.post("/api/kiosk/beta/parking/kiosk-list");
 
     setImages(data.list);
+  }, []);
+
+  useEffect(() => {
+    getImageFile();
   }, []);
 
   return (

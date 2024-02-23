@@ -91,7 +91,7 @@ const ParkingInfo = () => {
     if( !kiosk.node_id || !selectCar ) {
       return navigation("/");
     }
-  }, []);
+  }, [kiosk, selectCar, navigation]);
 
   const onClickFindRoute = async () => {
     const { data } = await axiosClient.post("/api/kiosk/beta/parking/find-route", {
