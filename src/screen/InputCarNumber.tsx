@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import useDataStore from "../store/useDataStore";
 import { numbers } from "../utils/temp";
@@ -9,19 +8,13 @@ import Footer from "../components/Footer";
 import Header from "../components/Header";
 import axiosClient from "../utils/axiosClient";
 import useAppStore from "../store/useAppStore";
-import { Layout } from "../utils/styles/Common";
+import { Layout, Title } from "../utils/styles/Common";
 import { InputLayout, NumberPad, NumberPadLayout } from "../utils/styles/NumberPad";
-
-const Title = styled.h2`
-  padding: 0;
-  font-size: 4.5vw;
-  font-weight: 100;
-  color: #fff;
-  margin-bottom: 4vh;
-`;
+import { Colors } from "../utils/colors";
+import { CommonProps } from "../navigation";
 
 const Input = styled.input`
-  width: 21.5%;
+  width: calc(25% - 10px);
   height: 10vh;
   font-size: 1.8rem;
   color: #006eb6;
@@ -32,27 +25,36 @@ const Input = styled.input`
   cursor: default;
 `;
 
-const InputCarNumber = () => {
-  const [ first, setFirst ] = useState("");
-  const [ second, setSecond ] = useState("");
-  const [ third, setThird ] = useState("");
-  const [ fourth, setFourth ] = useState("");
+interface InputValue {
+  first: string;
+  second: string;
+  third: string;
+  fourth: string;
+};
+
+const InputCarNumber = (props: CommonProps.ComponentProps) => {
+  const [ inputs, setInputs ] = useState<InputValue>({
+    first: "",
+    second: "",
+    third: "",
+    fourth: "",
+  });
   const [ carNumber, setCarNumber ] = useState("");
   const { setModal } = useAppStore();
   const { kiosk, mobile, setCarList } = useDataStore();
-  const navigation = useNavigate();
 
   useEffect(() => {
     if( mobile && !kiosk.node_id ) {
-      return navigation("/");
+      return props.navigation("/");
     }
-  }, [mobile, kiosk, navigation]);
+
+    kiosk.node_id = "K20002";
+    kiosk.flor_nm = "P6";
+    kiosk.img_path = "http://localhost:8080/self/img/bg/IFC_B6_0.png";
+  }, [mobile, kiosk, props]);
   
   const init = () => {
-    setFirst("");
-    setSecond("");
-    setThird("");
-    setFourth("");
+    setInputs({ first: "", second: "", third: "", fourth: ""});
     setCarNumber("");
   };
 
@@ -61,21 +63,23 @@ const InputCarNumber = () => {
 
     switch (len) {
       case 0:
-        setCarNumber(text);
-        setFirst(text);
-        return;
+        setCarNumber(carNumber + text);
+        setInputs({...inputs, first: text});
+        break;
       case 1:
         setCarNumber(carNumber + text);
-        setSecond(text);
-        return;
+        setInputs({...inputs, second: text});
+        break;
       case 2:
         setCarNumber(carNumber + text);
-        setThird(text);
-        return;
+        setInputs({...inputs, third: text});
+        break;
       case 3:
         setCarNumber(carNumber + text);
-        setFourth(text);
-        return;
+        setInputs({...inputs, fourth: text});
+        break;
+      default:
+        break;
     }
   };
 
@@ -85,20 +89,20 @@ const InputCarNumber = () => {
     switch (len) {
       case 1:
         setCarNumber(carNumber.substring(0, carNumber.length - 1));
-        setFirst("");
-        return;
+        setInputs({...inputs, first: ""});
+        break;
       case 2:
         setCarNumber(carNumber.substring(0, carNumber.length - 1));
-        setSecond("");
-        return;
+        setInputs({...inputs, second: ""});
+        break;
       case 3:
         setCarNumber(carNumber.substring(0, carNumber.length - 1));
-        setThird("");
-        return;
+        setInputs({...inputs, third: ""});
+        break;
       case 4:
         setCarNumber(carNumber.substring(0, carNumber.length - 1));
-        setFourth("");
-        return;
+        setInputs({...inputs, fourth: ""});
+        break;
     }
   };
 
@@ -117,7 +121,7 @@ const InputCarNumber = () => {
 
   const onSubmit = async () => {
     if( carNumber.length !== 4) {
-      return setModal({ open: true, content: "차량번호 4자리를 입력해 주세요." });
+      return setModal({ open: true, content: "차량번호 4자리를 입력해 주세요" });
     }
 
     const { data } = await axiosClient.post("/api/kiosk/beta/parking/car-list", {
@@ -133,43 +137,38 @@ const InputCarNumber = () => {
 
     setCarList(data.list);
 
-    navigation("/kiosk/select");
-  }
+    props.navigation("/kiosk/select");
+  };
 
   return (
     <Layout>
       <Header text="차량번호 입력" />
-      <Title>차량번호 뒤의 4자리를 입력해 주세요.</Title>
+      <Title>차량번호 뒤 4자리를 입력해 주세요</Title>
       <InputLayout>
-        <Input type="text" readOnly maxLength={1} value={first} style={{marginLeft: 0}} />
-        <Input type="text" readOnly maxLength={1} value={second} />
-        <Input type="text" readOnly maxLength={1} value={third} />
-        <Input type="text" readOnly maxLength={1} value={fourth} style={{marginRight: 0}} />
+        <Input type="text" readOnly maxLength={1} value={inputs.first} style={{marginLeft: 0}} />
+        <Input type="text" readOnly maxLength={1} value={inputs.second} />
+        <Input type="text" readOnly maxLength={1} value={inputs.third} />
+        <Input type="text" readOnly maxLength={1} value={inputs.fourth} style={{marginRight: 0}} />
       </InputLayout>
       <NumberPadLayout>
         {numbers.map((item) => {
           return (
             item === 10 ?
-              (
-                <NumberPad
-                  key={item}
-                  onClick={onClickCancel}
-                >
-                  <Icon path={mdiCloseBox} size={1} color="#006eb6" />
-                </NumberPad>
-              )
+              <NumberPad key={item} onClick={onClickCancel}>
+                <Icon path={mdiCloseBox} size={1} color="#006eb6" />
+              </NumberPad>
                 :
               ( item === 11 ?
                   (
                     <NumberPad 
                       key={item}
-                      style={{background: "#006eb6", color: "#fff", border: 0}}
+                      style={{background: Colors.Primary, color: Colors.White, border: 0}}
                       onClick={onSubmit}
                     >
                       확인
                     </NumberPad>
                   )
-                :
+                    :
                   <NumberPad key={item} onClick={(e) => onClickNumber(e.currentTarget.innerHTML)}>{item}</NumberPad>
               )
           );

@@ -25,7 +25,7 @@ const ButtonLayout = styled.div`
 const Button = styled.button`
   background: rgb(59, 58, 66);
   color: #fff;
-  font-size: 1rem;
+  font-size: 3vmin;
   border: 0;
   padding: 0;
   cursor: pointer;
@@ -51,25 +51,25 @@ const Footer = (props: HeaderProps) => {
   return (
     <Layout>
       {text &&
-      <>
-        <ButtonLayout>
-          <Icon path={mdiChevronLeft} size={1} color="#fff" />
-          <Button
-            onClick={onClickPrev}
-          >
-            {text}
-          </Button>
-        </ButtonLayout>
-        <ButtonLayout>
-          <Icon path={mdiHome } size={1} color="#fff" />
-          <Button
-            onClick={onClickMain}
-            style={{ padding: "0 10px 0 5px" }}
-          >
-            처음으로
-          </Button>
-        </ButtonLayout>
-      </>
+        <>
+          <ButtonLayout>
+            <Icon path={mdiChevronLeft} size={1} color="#fff" />
+            <Button
+              onClick={onClickPrev}
+            >
+              {text}
+            </Button>
+          </ButtonLayout>
+          <ButtonLayout>
+            <Icon path={mdiHome } size={1} color="#fff" />
+            <Button
+              onClick={onClickMain}
+              style={{ padding: "0 10px 0 5px" }}
+            >
+              처음으로
+            </Button>
+          </ButtonLayout>
+        </>
       }
     </Layout>
   )

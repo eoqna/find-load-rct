@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const InputLayout = styled.div`
-  width: calc(100% - 20px);
+  width: calc(100% - 18px);
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -17,7 +17,7 @@ export const NumberPadLayout = styled.div`
 `;
 
 export const NumberPad = styled.button`
-  width: 30%;
+  width: calc(33% - 10px);
   margin: 5px;
   height: 8vh;
   text-align: center;

@@ -1,15 +1,15 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import useDataStore from "../store/useDataStore";
 import { Layout } from "../utils/styles/Common";
-import { useNavigate } from "react-router";
 import Lottie from "lottie-react";
 import LottieData from "../assets/lottie/loading.json";
 import ParkingMark from "../assets/imgs/parking_marker.png";
 import LocationMark from "../assets/imgs/location_marker.png";
 import { Colors } from "../utils/colors";
+import { CommonProps } from "../navigation";
 let width: number;
 let cvs: Element | null;
 let idx = 0;
@@ -34,8 +34,8 @@ const LottieView = styled(Lottie)`
 const LottieText = styled.p`
   position: absolute;
   font-weight: bold;
-  font-size: 2vh;
-  color: rgb(90, 90, 90);
+  font-size: 4.5vmin;
+  color: ${Colors.White};
   z-index: 100;
   top: 50%;
   left: 50%;
@@ -51,10 +51,8 @@ interface PointProps {
 
 type ImageState = "first" | "waitting" | "second" | "";
 
-const FindRoute = () => {
+const FindRoute = (props: CommonProps.ComponentProps) => {
   const { pathInfo } = useDataStore();
-  const navigation = useNavigate();
-  const ref = useRef<HTMLDivElement>(null);
   const [ imgPath, setImgPath ] = useState("");
   const [ rePoint, setRePoint ] = useState<PointProps[]>([]);
   const [ imgState, setImgState ] = useState<ImageState>("");
@@ -65,10 +63,10 @@ const FindRoute = () => {
   let raf: number;
 
   useEffect(() => {
-    if( pathInfo.length < 1 ) {
-      navigation("/");
+    if( !pathInfo ) {
+      props.navigation("/");
     }
-  }, [pathInfo, navigation]);
+  }, [pathInfo, props]);
 
   const init = () => {
     cvs = document.querySelector(".canvas-layout");
@@ -158,22 +156,10 @@ const FindRoute = () => {
       if (i >= rePoint.length-1) {
         cancelAnimationFrame(raf);
 
-        // if (idx >= pathInfo.length) {
-          const img = document?.getElementById("parking_img") as HTMLImageElement;
-          ctx.drawImage(img, markerPosition.x, markerPosition.y);
-          idx = 0;
-          return;
-
-        // } else {
-        //   i=0;
-
-        //   ctx.clearRect(0, 0, 4000, 4000);
-        //   setImgState("waitting");
-        //   setImgPath(pathInfo[1].canvas_img);
-        //   convertCoordinates(1, Number(width));
-
-        //   return;
-        // }
+        const img = document?.getElementById("parking_img") as HTMLImageElement;
+        ctx.drawImage(img, markerPosition.x, markerPosition.y);
+        idx = 0;
+        return;
 
       } else {
         ctx.lineTo(rePoint[i+1].x, rePoint[i+1].y);
@@ -185,33 +171,6 @@ const FindRoute = () => {
     }
   };
 
-  // const switchDrawLine = (ctx: CanvasRenderingContext2D) => {
-  //   if (rePoint[i+1].x > rePoint[i].x) {
-  //     drawLine(ctx, rePoint[i+1].x - rePoint[i].x, rePoint[i].x+z, rePoint[i].y);
-
-  //   } else if (rePoint[i].x > rePoint[i+1].x) {
-  //     drawLine(ctx, rePoint[i].x - rePoint[i+1].x, rePoint[i].x-z, rePoint[i].y);
-
-  //   } else if (rePoint[i+1].y > rePoint[i].y) {
-  //     drawLine(ctx, rePoint[i+1].y - rePoint[i].y, rePoint[i].x, rePoint[i].y+z);
-
-  //   } else if (rePoint[i].y > rePoint[i+1].y) {
-  //     drawLine(ctx, rePoint[i].y - rePoint[i+1].y, rePoint[i].x, rePoint[i].y - z);
-  //   }
-  // };
-
-  // const drawLine = (ctx: CanvasRenderingContext2D, max: number, x: number, y: number) => {
-  //   if(z >= max) {
-  //     z=0;
-  //     i++;
-
-  //   } else {
-  //     ctx.lineTo(x, y);
-  //     ctx.stroke();
-  //     z+=1;
-  //   }
-  // };
-
   const onLoadBackgroundImage = () => {
     if ( pathInfo.length <= 1 ) {
       drawLine();
@@ -222,9 +181,6 @@ const FindRoute = () => {
         drawLine();
       }
     }
-    // if ( rePoint ) {
-    //   initDraw();
-    // }
   };
 
   return (
@@ -234,7 +190,6 @@ const FindRoute = () => {
       {imgState === "waitting" ?
         <LottieLayout>
           <LottieView
-            ref={ref}
             loop={2}
             animationData={LottieData}
             onLoopComplete={() => setImgState("second")}
@@ -246,6 +201,7 @@ const FindRoute = () => {
           id="image"
           className="image"
           src={imgPath}
+          alt="Parking Image"
           onLoad={onLoadBackgroundImage}
         />
       }
@@ -253,10 +209,12 @@ const FindRoute = () => {
         <img 
           id="parking_img" 
           src={ParkingMark}
+          alt="Parking Marker"
         />
         <img 
           id="location_img" 
           src={LocationMark}
+          alt="Location Marker"
         />
       </div>
       <Footer text="주차정보" prev="/kiosk/info" />

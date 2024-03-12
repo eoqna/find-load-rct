@@ -13,7 +13,7 @@ interface DataState {
 const defaultModalState: ModalState = {
   open: false,
   content: "",
-}
+};
 
 const useAppStore = create<DataState>()((set) => ({
   modal: defaultModalState,

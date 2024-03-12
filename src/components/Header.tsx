@@ -22,7 +22,7 @@ const TextLayout = styled.div`
 
 const Text = styled.span`
   color: #fff;
-  font-size: 1.5rem;
+  font-size: 4vmin;
   font-weight: bold;
 `;
 

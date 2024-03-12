@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router";
+import { Route, Routes, useNavigate } from "react-router";
 import styled from "styled-components";
 import InputCarNumber from "../screen/InputCarNumber";
 import SelectCar from "../screen/SelectCar";
@@ -17,15 +17,17 @@ const Layout = styled.div`
 `;
 
 const Navigations = () => {
+  const navigation = useNavigate();
+
   return (
     <Layout className="main" >
       <Routes>
-        <Route index element={<Main />} />
-        <Route path="/kiosk/floor" element={<InputKioskInfo />} />
-        <Route path="/kiosk/input" element={<InputCarNumber />} />
-        <Route path="/kiosk/select" element={<SelectCar />} />
-        <Route path="/kiosk/info" element={<ParkingInfo />} />
-        <Route path="/kiosk/route" element={<FindRoute />} />
+        <Route index element={<Main navigation={navigation} />} />
+        <Route path="/kiosk/floor" element={<InputKioskInfo navigation={navigation} />} />
+        <Route path="/kiosk/input" element={<InputCarNumber navigation={navigation} />} />
+        <Route path="/kiosk/select" element={<SelectCar navigation={navigation} />} />
+        <Route path="/kiosk/info" element={<ParkingInfo navigation={navigation} />} />
+        <Route path="/kiosk/route" element={<FindRoute navigation={navigation} />} />
         <Route path="/test" element={<KioskInfo />} />
         <Route path="/common/footer" element={<Footer />} />
       </Routes>

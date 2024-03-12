@@ -2,12 +2,13 @@ import styled from "styled-components";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import useDataStore from "../store/useDataStore";
-import { useNavigate } from "react-router";
 import axiosClient from "../utils/axiosClient";
 import { Layout } from "../utils/styles/Common";
 import useAppStore from "../store/useAppStore";
 import { Colors } from "../utils/colors";
 import { useEffect } from "react";
+import { CommonProps } from "../navigation";
+import initCarImage from "../assets/imgs/initcar.png";
 
 const CarInfoLayout = styled.div`
   width: 80%;
@@ -28,36 +29,39 @@ const CarImage = styled.img`
 
 const CarInfo = styled.div`
   width: 100%;
+  height: calc(60% - 15px);
   display: flex;
   flex-direction: column;
-  margin-top: 5vh;
+  margin-top: 15px;
 `;
 
 const TextLayout = styled.div`
   display: flex;
   width: 100%;
+  height: calc(25% - 10px);
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 10px;
 `;
 
 const Label = styled.p`
   padding: 0;
   margin: 0;
-  width: 30%;
+  width: 23%;
   font-weight: bold;
-  font-size: 1.8vh;
+  font-size: 3vmin;
 `;
 
 const Text = styled.p`
-  width: 60%;
+  width: 75%;
   padding: 5px 0;
-  margin: 5px 0 10px;
   border-radius: 5px;
   color: #fff;
   text-align: center;
   background: #006eb6;
-  font-weight: 500;
-  font-size: 1.8vh;
+  font-weight: bold;
+  font-size: 2.5vmin;
+  margin: 0;
 `;
 
 const ButtonLayout = styled.div`
@@ -66,7 +70,6 @@ const ButtonLayout = styled.div`
   height: 10%;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
 `;
 
 const Button = styled.button`
@@ -74,7 +77,7 @@ const Button = styled.button`
   height: 100%;
   margin: 0;
   padding: 0;
-  font-size: 2vh;
+  font-size: 4vmin;
   font-weight: bold;
   color: ${Colors.White};
   background: ${Colors.Primary};
@@ -82,16 +85,15 @@ const Button = styled.button`
   border-radius: 10px;
 `;
 
-const ParkingInfo = () => {
+const ParkingInfo = (props: CommonProps.ComponentProps) => {
   const { setModal } = useAppStore();
-  const { selectCar, kiosk, setPathInfo } = useDataStore();
-  const navigation = useNavigate();
+  const { mobile, selectCar, kiosk, setPathInfo } = useDataStore();
 
   useEffect(() => {
-    if( !kiosk.node_id || !selectCar ) {
-      return navigation("/");
+    if( !selectCar.car_num ) {
+      return props.navigation("/");
     }
-  }, [kiosk, selectCar, navigation]);
+  }, [selectCar, props]);
 
   const onClickFindRoute = async () => {
     const { data } = await axiosClient.post("/api/kiosk/beta/parking/find-route", {
@@ -106,8 +108,8 @@ const ParkingInfo = () => {
 
     setPathInfo(data.list);
 
-    navigation("/kiosk/route");
-  }
+    props.navigation("/kiosk/route");
+  };
 
   return (
     <Layout>
@@ -116,6 +118,7 @@ const ParkingInfo = () => {
         <CarImage
           src={selectCar.img_path}
           alt="차량 이미지"
+          onError={(e) => {e.currentTarget.src = initCarImage}}
         />
         <CarInfo>
           <TextLayout>
@@ -137,10 +140,22 @@ const ParkingInfo = () => {
         </CarInfo>
       </CarInfoLayout>
 
-      <ButtonLayout>
-        <Button>위치출력</Button>
-        <Button onClick={onClickFindRoute}>위치안내</Button>
-      </ButtonLayout>
+      {mobile ?
+        <ButtonLayout style={{justifyContent : "center"}}>
+        <Button 
+          style={{ width: "100%", height: "70%" }}
+          onClick={onClickFindRoute}
+        >
+          위치안내
+        </Button>
+        </ButtonLayout>
+          :
+        <ButtonLayout style={{justifyContent : "space-between"}}>
+          <Button>위치출력</Button>
+          <Button onClick={onClickFindRoute}>위치안내</Button>
+        </ButtonLayout>
+      }
+      
       <Footer text="차량선택" prev="/kiosk/select" />
     </Layout>
   );

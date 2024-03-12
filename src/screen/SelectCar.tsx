@@ -1,18 +1,11 @@
-import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import useDataStore from "../store/useDataStore";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import { useEffect } from "react";
-import { Layout } from "../utils/styles/Common";
-
-const Title = styled.h2`
-  margin-bottom: 6vh;
-  padding: 0;
-  font-size: 4.5vw;
-  font-weight: 100;
-  color: #fff;
-`;
+import { Layout, Title } from "../utils/styles/Common";
+import initCarImage from "../assets/imgs/initcar.png";
+import { CommonProps } from "../navigation";
 
 const CarListLayout = styled.div`
   width: 80%;
@@ -37,19 +30,18 @@ const CarImage = styled.img`
 `;
 
 const CarInfo = styled.div`
-  width: 60%;
+  width: calc(60% - 10px);
   height: 100%;
   margin-left: 10px;
-
 `;
 
 const Label = styled.p`
-  height: 25%;
+  height: calc(25% - 3px);
   display: flex;
   align-items: center;
-  font-size: 1rem;
+  font-size: 3vmin;
   font-weight: bold;
-  margin: 0 0 0 3px;
+  margin: 0 0 3px 0;
 `;
 
 const Text = styled.p`
@@ -63,38 +55,34 @@ const Text = styled.p`
   color: #fff;
   background: #006eb6;
   font-weight: 500;
-  font-size: 1.2rem;
-
-  @media (max-width: 800px) {
-    font-size: 1rem;
-  }
+  font-size: 3vmin;
 `;
 
-const SelectCar = () => {
-  const navigation = useNavigate();
+const SelectCar = (props: CommonProps.ComponentProps) => {
   const { carList, setSelectCar } = useDataStore();
 
   useEffect(() => {
-    if( carList.length < 0 ) {
-      navigation("/");
+    if( !carList.length ) {
+      console.log("실행");
+      props.navigation("/");
     }
-  })
+  }, [carList, props]);
 
   const onSelectCarNumber = (item: ApiResponse.CarState) => {
     setSelectCar(item);
-    navigation("/kiosk/info");
+    props.navigation("/kiosk/info");
   };
 
   return (
     <Layout>
       <Header text="차량선택" />
-      <Title>고객님의 차량을 선택해 주세요.</Title>
+      <Title>고객님의 차량을 선택해 주세요</Title>
       {
         carList.map((item, index) => {
           return (
             <CarListLayout key={index} onClick={() => onSelectCarNumber(item)}>
               <CarImageLayout>
-                <CarImage src={item.img_path} alt="차량 이미지" />
+                <CarImage src={item.img_path} alt="차량 이미지" onError={(e) => {e.currentTarget.src = initCarImage}} />
               </CarImageLayout>
               <CarInfo>
                 <Label>차량번호</Label>

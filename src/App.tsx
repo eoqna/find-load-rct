@@ -3,18 +3,29 @@ import { BrowserRouter } from 'react-router-dom';
 import Navigations from './navigation/Navigations';
 import Modal from './screen/Modal';
 import useAppStore from './store/useAppStore';
+import useDataStore from './store/useDataStore';
 
 const App = () => {
   const { modal, setModal } = useAppStore();
+  const { setPlatformWidth, isMobile } = useDataStore();
 
-  function setScreenSize() {
-    let vh = window.innerHeight * 0.01;
-    document.documentElement.style.setProperty("--vh", `${vh}px`);
+  const setInnerWidth = () => {
+    setPlatformWidth(window.innerWidth);
+
+    console.log(window.innerWidth);
+
+    if(window.innerWidth < 800) {
+      isMobile(true);
+    } else {
+      isMobile(false);
+    }
   };
 
   useEffect(() => {
-    setScreenSize();
-  });
+    setInnerWidth();
+
+    window.addEventListener("resize", setInnerWidth);
+  }, []);
 
   useEffect(() => {
     if( modal.open ) {

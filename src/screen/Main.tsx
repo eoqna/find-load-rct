@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
 import styled from "styled-components";
 import image from "../assets/imgs/background.png";
 import moment from "moment";
 import useDataStore from "../store/useDataStore";
+import { CommonProps } from "../navigation";
 
 const Layout = styled.div`
   width: 100%;
@@ -27,14 +27,14 @@ const SubTitle = styled.p`
   color: #fff;
   padding: 0;
   margin: 5px 0;
-  font-size: 4vw;
+  font-size: 5vmin;
 `;
 
 const Title = styled.p`
   color: #fff;
   padding: 0;
   margin: 5px 0;
-  font-size: 10vw;
+  font-size: 10vmin;
   font-weight: bold;
 `;
 
@@ -47,8 +47,8 @@ const TimeLayout = styled.div`
 const Time = styled.p`
   color: #fff;
   padding: 0;
-  margin: 10vh 0;
-  font-size: 20vw;
+  margin: 10vmin 0;
+  font-size: 25vmin;
   font-weight: bold;
 `;
 
@@ -62,28 +62,13 @@ const Bottom = styled.p`
   color: #fff;
   padding: 0;
   margin: 5px 0;
-  font-size: 6vw;
+  font-size: 7vmin;
   font-weight: bold;
 `;
 
-const Main = () => {
-  const navigation = useNavigate();
-  const { mobile, platformWidth, setPlatformWidth, isMobile } = useDataStore();
+const Main = (props: CommonProps.ComponentProps) => {
+  const { mobile } = useDataStore();
   const [ time, setTime ] = useState(moment().format("HH:mm"));
-
-  useEffect(() => {
-    const setInnerWidth = () => {
-      setPlatformWidth(window.innerWidth);
-    };
-
-    window.addEventListener("resize", setInnerWidth);
-
-    if(platformWidth < 800) {
-      isMobile(true);
-    } else {
-      isMobile(false);
-    }
-  }, []);
 
   const now = () => {
     setTime(moment().format("HH:mm"));
@@ -101,10 +86,10 @@ const Main = () => {
 
   const onClickBackground = () => {
     if( mobile ) {
-      return navigation("/kiosk/floor");
+      return props.navigation("/kiosk/floor");
     }
     
-    navigation("/kiosk/input");
+    props.navigation("/kiosk/input");
   }
 
   return (

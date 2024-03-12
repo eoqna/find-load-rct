@@ -8,3 +8,11 @@ export const Layout = styled.div`
   justify-content: center;
   align-items: center;
 `;
+
+export const Title = styled.h2`
+padding: 0;
+font-size: 5vmin;
+font-weight: 100;
+color: #fff;
+margin-bottom: 5vmin;
+`;

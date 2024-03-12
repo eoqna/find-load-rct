@@ -20,7 +20,7 @@ const Content = styled.div`
   background: white;
   border: 0 solid #fff;
   border-radius: 5px;
-  font-size: 3.5vw;
+  font-size: 4vmin;
   font-weight: bold;
   padding: 60px 0;
   color: rgba(0, 0, 0, 0.7);
