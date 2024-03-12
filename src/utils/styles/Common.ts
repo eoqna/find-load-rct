@@ -14,5 +14,5 @@ padding: 0;
 font-size: 5vmin;
 font-weight: 100;
 color: #fff;
-margin-bottom: 5vmin;
+margin: 0 0 5vmin 0;
 `;

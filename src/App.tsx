@@ -12,8 +12,6 @@ const App = () => {
   const setInnerWidth = () => {
     setPlatformWidth(window.innerWidth);
 
-    console.log(window.innerWidth);
-
     if(window.innerWidth < 800) {
       isMobile(true);
     } else {

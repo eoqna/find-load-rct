@@ -48,14 +48,20 @@ const InputCarNumber = (props: CommonProps.ComponentProps) => {
       return props.navigation("/");
     }
 
-    kiosk.node_id = "K20002";
-    kiosk.flor_nm = "P6";
-    kiosk.img_path = "http://localhost:8080/self/img/bg/IFC_B6_0.png";
+    if( !mobile ) {
+      initKioskInfo();
+    }
   }, [mobile, kiosk, props]);
   
   const init = () => {
     setInputs({ first: "", second: "", third: "", fourth: ""});
     setCarNumber("");
+  };
+
+  const initKioskInfo = async () => {
+    kiosk.node_id = "K20002";
+    kiosk.flor_nm = "P6";
+    kiosk.img_path = "http://localhost:8080/self/img/bg/IFC_B6_0.png";
   };
 
   const onClickNumber = (text: string) => {
