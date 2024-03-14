@@ -43,6 +43,12 @@ const InputCarNumber = (props: CommonProps.ComponentProps) => {
   const { setModal } = useAppStore();
   const { kiosk, mobile, setCarList } = useDataStore();
 
+  /**
+   * mobile이고 kiosk 정보가 없을 경우 메인 화면으로 이동한다.
+   * 
+   * 모바일이 아닌 경우 initKioskInfo() 함수를 호출한다.
+   * initKioskInfo : 키오스크 정보 초기화 함수
+   */
   useEffect(() => {
     if( mobile && !kiosk.node_id ) {
       return props.navigation("/");
@@ -53,17 +59,32 @@ const InputCarNumber = (props: CommonProps.ComponentProps) => {
     }
   }, [mobile, kiosk, props]);
   
+  /**
+   * 입력받은 차량 번호를 초기화한다.
+   */
   const init = () => {
     setInputs({ first: "", second: "", third: "", fourth: ""});
     setCarNumber("");
   };
 
+  /**
+   * 키오스크 정보를 초기화 한다. (모바일 X)
+   * 
+   * 나중에 키오스크 정보를 어떻게 받아와야할 지 생각해봐야함
+   */
   const initKioskInfo = async () => {
     kiosk.node_id = "K20002";
     kiosk.flor_nm = "P6";
     kiosk.img_path = "http://localhost:8080/self/img/bg/IFC_B6_0.png";
   };
 
+  /**
+   * 넘버 패드를 클릭(터치)하는 경우 호출되는 함수
+   * 
+   * 입력 받은 숫자를 차량 번호 및 inputs(차량 번호 입력 창)에 넣어준다.
+   * 
+   * @param text : 사용자가 터치 한 숫자
+   */
   const onClickNumber = (text: string) => {
     const len = carNumber.length;
 
@@ -89,6 +110,11 @@ const InputCarNumber = (props: CommonProps.ComponentProps) => {
     }
   };
 
+  /**
+   * 넘버 패드 중 cancel('X') 클릭(터치)하는 경우 호출되는 함수
+   * 
+   * 입력된 차량 번호의 길이에 따라 맨 뒤의 값 부터 삭제한다.
+   */
   const onClickCancel = () => {
     const len = carNumber.length;
 
@@ -112,6 +138,11 @@ const InputCarNumber = (props: CommonProps.ComponentProps) => {
     }
   };
 
+  /**
+   * 받아온 차량의 입차 시간을 Date 형태로 변환한다.
+   * 
+   * @parameter data : 차량 번호로 검색한 차량 데이터
+   */
   const parseStringToDate = (data: ApiResponse.CarState[]) => {
     for( let i=0; i<data.length; i++) {
       const year = data[i].in_dtm.substring(0, 4);
@@ -125,8 +156,21 @@ const InputCarNumber = (props: CommonProps.ComponentProps) => {
     }
   };
 
+  /**
+   * 입력 받은 차량 번호를 서버로 전송해서 차량 데이터를 받아오는 함수
+   * 
+   * 받아온 입차 시간을 Date 형식으로 파싱하고 데이터를 state에 넣어준다.
+   * 
+   * 차량 데이터가 있는 경우 차량 선택 화면으로 이동한다.
+   * 
+   * * Error
+   *  - 차량 번호가 4자리 미만인 경우 모달창을 띄운다.
+   *  - 조회된 데이터가 없는 경우 모달창을 띄운다.
+   * 
+   * @returns 
+   */
   const onSubmit = async () => {
-    if( carNumber.length !== 4) {
+    if( carNumber.length < 4) {
       return setModal({ open: true, content: "차량번호 4자리를 입력해 주세요" });
     }
 

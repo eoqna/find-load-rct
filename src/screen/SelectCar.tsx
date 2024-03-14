@@ -68,6 +68,15 @@ const SelectCar = (props: CommonProps.ComponentProps) => {
     }
   }, [carList, props]);
 
+  /**
+   * 차량 목록 클릭 시 호출 함수
+   * 
+   * 차량 정보를 selectCar에 넣어준다.
+   * 
+   * 차량 선택 시 '주차 상세 정보' 페이지로 이동한다.
+   * 
+   * @param item : 선택한 차량 정보
+   */
   const onSelectCarNumber = (item: ApiResponse.CarState) => {
     setSelectCar(item);
     props.navigation("/kiosk/info");
@@ -96,7 +105,7 @@ const SelectCar = (props: CommonProps.ComponentProps) => {
       }
       <Footer text="차량번호 입력" prev="/kiosk/input" />
     </Layout>
-  )
+  );
 };
 
 export default SelectCar;

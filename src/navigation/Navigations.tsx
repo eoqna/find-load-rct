@@ -8,7 +8,7 @@ import ParkingInfo from "../screen/ParkingInfo";
 import Footer from "../components/Footer";
 import { Colors } from "../utils/colors";
 import InputKioskInfo from "../screen/InputKioskInfo";
-import KioskInfo from "../screen/KioskInfo";
+import useEventTimeout from "../hooks/useEventTimeout";
 
 const Layout = styled.div`
   width: 100vw;
@@ -18,6 +18,7 @@ const Layout = styled.div`
 
 const Navigations = () => {
   const navigation = useNavigate();
+  useEventTimeout(() => navigation('/'));
 
   return (
     <Layout className="main" >
@@ -28,7 +29,6 @@ const Navigations = () => {
         <Route path="/kiosk/select" element={<SelectCar navigation={navigation} />} />
         <Route path="/kiosk/info" element={<ParkingInfo navigation={navigation} />} />
         <Route path="/kiosk/route" element={<FindRoute navigation={navigation} />} />
-        <Route path="/test" element={<KioskInfo />} />
         <Route path="/common/footer" element={<Footer />} />
       </Routes>
     </Layout>

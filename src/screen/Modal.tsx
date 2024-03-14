@@ -34,6 +34,6 @@ const Modal = () => {
       <Content>{modal.content ? modal.content : ""}</Content>
     </BackgroundLayout>
   );
-}
+};
 
 export default Modal;

@@ -95,6 +95,15 @@ const ParkingInfo = (props: CommonProps.ComponentProps) => {
     }
   }, [selectCar, props]);
 
+  /**
+   * 키오스크 노드 ID와 차량 위치 노드 ID로 길 찾기 로직 수행 함수
+   * 
+   * response data의 code가 '404'인 경우 모달창을 띄운다.
+   * 
+   * 아닌 경우 pathInfo에 길찾기 데이터를 넣는다.
+   * 
+   * 길찾기 완료 후 길 찾기 화면으로 이동한다.
+   */
   const onClickFindRoute = async () => {
     const { data } = await axiosClient.post("/api/kiosk/beta/parking/find-route", {
       rotate: 0,

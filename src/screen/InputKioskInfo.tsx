@@ -28,6 +28,10 @@ const InputKioskInfo = (props: CommonProps.ComponentProps) => {
   const { setModal } = useAppStore();
   const { kiosk, setKiosk } = useDataStore();
 
+  /**
+   * 
+   * @param text : 사용자가 터치한 숫자
+   */
   const onClickNumber = (text: string) => {
     setFloor(floor+text);
   };

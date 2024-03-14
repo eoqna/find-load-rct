@@ -39,7 +39,7 @@ const Header = (props: HeaderProps) => {
         <Text>{text}</Text>
       </TextLayout>
     </Layout>
-  )
+  );
 };
 
 export default Header;

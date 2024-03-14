@@ -31,19 +31,25 @@ const Button = styled.button`
   cursor: pointer;
 `;
 
-interface HeaderProps {
+interface FooterProps {
   text?: string;
   prev?: string;
 };
 
-const Footer = (props: HeaderProps) => {
+const Footer = (props: FooterProps) => {
   const { prev, text } = props;
   const navigation = useNavigate();
 
+  /**
+   * 이전 창 이동 함수
+   */
   const onClickPrev = () => {
     navigation(`${prev}`);
   };
 
+  /**
+   * 메인 창 이동 함수
+   */
   const onClickMain = () => {
     navigation("/");
   };
@@ -72,7 +78,7 @@ const Footer = (props: HeaderProps) => {
         </>
       }
     </Layout>
-  )
+  );
 };
 
 export default Footer;
