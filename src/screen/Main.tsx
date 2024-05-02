@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import styled from "styled-components";
 import moment from "moment";
 import useDataStore from "../store/useDataStore";
@@ -14,7 +14,7 @@ const Layout = styled.div<{ bg: string }>`
   background-position: center center;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: end;
   align-items: center;
   color: rgba(0, 0, 0, 0.7);
 `;
@@ -38,51 +38,32 @@ const BottomLayout = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding-bottom: 10vmin;
+  padding-bottom: 8vmin;
 `;
 
 const Bottom = styled.p`
   padding: 0;
   margin: 0;
-  font-size: 7vmin;
+  font-size: 5vmin;
   font-weight: bold;
 `;
 
 const Main = (props: CommonProps.ComponentProps) => {
   const { mobile } = useDataStore();
-  const [ time, setTime ] = useState(moment().format("HH:mm"));
   const [ activeIndex, setActiveIndex ] = useState(0);
-
-  // const now = () => {
-  //   setTime(moment().format("HH:mm"));
-  // };
-
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     now();
-  //   }, 1000);
-
-  //   return () => {
-  //     clearInterval(interval);
-  //   };
-  // }, []);
-
-  const nextSlice = () => {
+  
+  const nextSlice = useCallback(() => {
     if(activeIndex < images.length-1) setActiveIndex(activeIndex + 1);
     else setActiveIndex(0);
-  };
+  }, [activeIndex]);
 
   useInterval(() => {
     nextSlice();
   }, 1000 * 10);
 
-  const onClickBackground = () => {
-    if( mobile ) {
-      return props.navigation("/kiosk/floor");
-    }
-    
+  const onClickBackground = useCallback(() => {    
     props.navigation("/kiosk/input");
-  };
+  }, [mobile]);
 
   return (
     <Layout

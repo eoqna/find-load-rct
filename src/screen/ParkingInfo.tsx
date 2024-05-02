@@ -105,15 +105,31 @@ const ParkingInfo = (props: CommonProps.ComponentProps) => {
    * 길찾기 완료 후 길 찾기 화면으로 이동한다.
    */
   const onClickFindRoute = async () => {
-    const { data } = await axiosClient.post("/api/kiosk/beta/parking/find-route", {
-      rotate: 0,
-      start_node: kiosk.node_id,
-      end_node: selectCar.node_id,
-    });
-    
+    let param = {};
+    let url = "";
+
+    if( mobile ) {
+      url = "/api/mobile/beta/parking/find-route";
+      param = {
+        start_node: selectCar.node_id,
+        flor_nm: selectCar.flor_nm,
+      };
+    } else {
+      url = "/api/kiosk/beta/parking/find-route";
+      param = {
+        rotate: 0,
+        start_node: "K10002",
+        end_node: selectCar.node_id,
+      };
+    }
+
+    const { data } = await axiosClient.post(url, param);
+
     if( data.code === "404" ) {
       return setModal({ open: true, content: data.msg });
     }
+
+    console.log(data);
 
     setPathInfo(data.list);
 

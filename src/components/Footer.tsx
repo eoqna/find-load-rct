@@ -58,20 +58,15 @@ const Footer = (props: FooterProps) => {
     <Layout>
       {text &&
         <>
-          <ButtonLayout>
+          <ButtonLayout onClick={onClickPrev}>
             <Icon path={mdiChevronLeft} size={1} color="#fff" />
-            <Button
-              onClick={onClickPrev}
-            >
+            <Button>
               {text}
             </Button>
           </ButtonLayout>
-          <ButtonLayout>
+          <ButtonLayout onClick={onClickMain}>
             <Icon path={mdiHome } size={1} color="#fff" />
-            <Button
-              onClick={onClickMain}
-              style={{ padding: "0 10px 0 5px" }}
-            >
+            <Button style={{ padding: "0 10px 0 5px" }}>
               처음으로
             </Button>
           </ButtonLayout>

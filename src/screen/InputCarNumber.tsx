@@ -50,14 +50,8 @@ const InputCarNumber = (props: CommonProps.ComponentProps) => {
    * initKioskInfo : 키오스크 정보 초기화 함수
    */
   useEffect(() => {
-    if( mobile && !kiosk.node_id ) {
-      return props.navigation("/");
-    }
-
-    if( !mobile ) {
-      initKioskInfo();
-    }
-  }, [mobile, kiosk, props]);
+    initKioskInfo();
+  }, []);
   
   /**
    * 입력받은 차량 번호를 초기화한다.
@@ -224,11 +218,7 @@ const InputCarNumber = (props: CommonProps.ComponentProps) => {
           );
           })}
       </NumberPadLayout>
-      {mobile ?
-        <Footer text="키오스크 선택" prev="/kiosk/floor"/>
-          :
-        <Footer />
-      }
+      <Footer />
     </Layout>
   );
 };

@@ -16,6 +16,15 @@ let idx = 0;
 
 const Canvas = styled.div``;
 
+const Floor = styled.div`
+  position: absolute;
+  left: 8vw;
+  top: 30%;
+  font-size: 4vmin;
+  font-weight: bold;
+  z-index: 1001;
+`;
+
 const ParkingImage = styled.img`
   position: absolute;
   width: 90%;
@@ -52,13 +61,14 @@ interface PointProps {
 type ImageState = "first" | "waitting" | "second" | "";
 
 const FindRoute = (props: CommonProps.ComponentProps) => {
-  const { pathInfo } = useDataStore();
+  const { mobile, pathInfo } = useDataStore();
   const [ imgPath, setImgPath ] = useState("");
   const [ rePoint, setRePoint ] = useState<PointProps[]>([]);
   const [ imgState, setImgState ] = useState<ImageState>("");
   const [ markerPosition, setMarkerPosition ] = useState<PointProps>({x: 0, y: 0});
   const [ firstFloor, setFirstFloor ] = useState("");
   const [ secondFloor, setSecondFloor ] = useState("");
+  const [ floor, setFloor ] = useState("");
   let i = 0;
   let raf: number;
 
@@ -98,6 +108,7 @@ const FindRoute = (props: CommonProps.ComponentProps) => {
       }
 
       setFirstFloor(pathInfo[0].canvas_img.substring(pathInfo[0].canvas_img.lastIndexOf("/")).split("_")[1]);
+      setFloor(pathInfo[0].canvas_img.substring(pathInfo[0].canvas_img.lastIndexOf("/")).split("_")[1]);
       setImgState("first");
       convertCoordinates(0, width);
       setImgPath(pathInfo[0].canvas_img);
@@ -161,6 +172,7 @@ const FindRoute = (props: CommonProps.ComponentProps) => {
         ctx.clearRect(0, 0, 4000, 4000);
         setImgState("waitting");
         setImgPath(pathInfo[1].canvas_img);
+        setFloor(pathInfo[1].canvas_img.substring(pathInfo[1].canvas_img.lastIndexOf("/")).split("_")[1]);
         convertCoordinates(1, Number(width));
 
         clearTimeout(timer);
@@ -192,8 +204,14 @@ const FindRoute = (props: CommonProps.ComponentProps) => {
 
       if (i >= rePoint.length-1) {
         cancelAnimationFrame(raf);
+        let img;
 
-        const img = document?.getElementById("parking_img") as HTMLImageElement;
+        if( !mobile ) {
+          img = document?.getElementById("parking_img") as HTMLImageElement;
+        } else {
+          img = document?.getElementById("location_img") as HTMLImageElement;
+        }
+
         ctx.drawImage(img, markerPosition.x, markerPosition.y);
         idx = 0;
         return;
@@ -244,13 +262,16 @@ const FindRoute = (props: CommonProps.ComponentProps) => {
           <LottieText>{firstFloor} → {secondFloor} 이동중</LottieText>
         </LottieLayout>
           :
-        <ParkingImage
-          id="image"
-          className="image"
-          src={imgPath}
-          alt="Parking Image"
-          onLoad={onLoadBackgroundImage}
-        />
+        <>
+          <Floor>{floor}</Floor>
+          <ParkingImage
+            id="image"
+            className="image"
+            src={imgPath}
+            alt="Parking Image"
+            onLoad={onLoadBackgroundImage}
+          />
+        </>
       }
       <div style={{display: "none"}}>
         <img 

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 
-const idleTimeout = 1000 * 10; // 5 minutes
+const idleTimeout = 1000 * 30; // 5 minutes
 
 const useEventTimeout = ( 
   callback: () => void,

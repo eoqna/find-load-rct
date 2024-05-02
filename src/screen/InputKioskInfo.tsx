@@ -37,9 +37,7 @@ const InputKioskInfo = (props: CommonProps.ComponentProps) => {
   };
 
   const onClickCancel = () => {
-    if( floor.length !== 0 ) {
-      setFloor(floor.substring(0, floor.length - 1));
-    }
+    if( floor.length !== 0 ) setFloor(floor.substring(0, floor.length - 1));
   };
   
   const onSubmit = async () => {

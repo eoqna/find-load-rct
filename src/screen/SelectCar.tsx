@@ -63,7 +63,6 @@ const SelectCar = (props: CommonProps.ComponentProps) => {
 
   useEffect(() => {
     if( !carList.length ) {
-      console.log("실행");
       props.navigation("/");
     }
   }, [carList, props]);
