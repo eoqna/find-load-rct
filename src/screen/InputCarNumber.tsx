@@ -41,17 +41,8 @@ const InputCarNumber = (props: CommonProps.ComponentProps) => {
   });
   const [ carNumber, setCarNumber ] = useState("");
   const { setModal } = useAppStore();
-  const { kiosk, mobile, setCarList } = useDataStore();
+  const { setCarList, setKiosk } = useDataStore();
 
-  /**
-   * mobile이고 kiosk 정보가 없을 경우 메인 화면으로 이동한다.
-   * 
-   * 모바일이 아닌 경우 initKioskInfo() 함수를 호출한다.
-   * initKioskInfo : 키오스크 정보 초기화 함수
-   */
-  useEffect(() => {
-    initKioskInfo();
-  }, []);
   
   /**
    * 입력받은 차량 번호를 초기화한다.
@@ -66,11 +57,23 @@ const InputCarNumber = (props: CommonProps.ComponentProps) => {
    * 
    * 나중에 키오스크 정보를 어떻게 받아와야할 지 생각해봐야함
    */
-  const initKioskInfo = async () => {
-    kiosk.node_id = "K20002";
-    kiosk.flor_nm = "P6";
-    kiosk.img_path = "http://localhost:8080/self/img/bg/IFC_B6_0.png";
+  const initKioskInfo = () => {
+    setKiosk({
+      node_id: "K20002",
+      flor_nm: "P6",
+      img_path: "http://localhost:8080/self/img/bg/IFC_B6_0.png"
+    });
   };
+
+  /**
+   * mobile이고 kiosk 정보가 없을 경우 메인 화면으로 이동한다.
+   * 
+   * 모바일이 아닌 경우 initKioskInfo() 함수를 호출한다.
+   * initKioskInfo : 키오스크 정보 초기화 함수
+   */
+  useEffect(() => {
+    initKioskInfo();
+  }, []);
 
   /**
    * 넘버 패드를 클릭(터치)하는 경우 호출되는 함수

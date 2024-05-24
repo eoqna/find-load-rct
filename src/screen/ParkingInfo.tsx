@@ -87,7 +87,7 @@ const Button = styled.button`
 
 const ParkingInfo = (props: CommonProps.ComponentProps) => {
   const { setModal } = useAppStore();
-  const { mobile, selectCar, kiosk, setPathInfo } = useDataStore();
+  const { mobile, selectCar, setPathInfo } = useDataStore();
 
   useEffect(() => {
     if( !selectCar.car_num ) {
@@ -118,7 +118,7 @@ const ParkingInfo = (props: CommonProps.ComponentProps) => {
       url = "/api/kiosk/beta/parking/find-route";
       param = {
         rotate: 0,
-        start_node: "K10002",
+        start_node: "K20001",
         end_node: selectCar.node_id,
       };
     }

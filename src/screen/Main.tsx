@@ -49,7 +49,6 @@ const Bottom = styled.p`
 `;
 
 const Main = (props: CommonProps.ComponentProps) => {
-  const { mobile } = useDataStore();
   const [ activeIndex, setActiveIndex ] = useState(0);
   
   const nextSlice = useCallback(() => {
@@ -63,7 +62,7 @@ const Main = (props: CommonProps.ComponentProps) => {
 
   const onClickBackground = useCallback(() => {    
     props.navigation("/kiosk/input");
-  }, [mobile]);
+  }, []);
 
   return (
     <Layout
