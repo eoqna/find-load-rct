@@ -35,7 +35,7 @@ const App = () => {
         clearTimeout(timeout);
       }
     }
-  }, [modal, setModal]);
+  }, [modal]);
 
   return (
     <BrowserRouter>

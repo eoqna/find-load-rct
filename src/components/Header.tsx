@@ -1,13 +1,13 @@
 import styled from "styled-components";
+import { Colors } from "../utils/colors";
 
 const Layout = styled.div`
   display: flex;
   width: 100%;
-  height: 7%;
   justify-content: space-between;
   align-items: center;
   position: absolute;
-  background: rgb(59, 58, 66);
+  background: ${Colors.White};
   top: 0;
   left: 0;
   z-index: 100;
@@ -15,28 +15,37 @@ const Layout = styled.div`
 
 const TextLayout = styled.div`
   display: flex;
+  width: calc(100% - 20px);
+  flex-direction: column;
   justify-content: center;
-  align-items: center;
-  margin-left: 10px;
+  padding: 20px 20px 0;
 `;
 
 const Text = styled.span`
-  color: #fff;
+  color: ${Colors.Black};
   font-size: 4vmin;
   font-weight: bold;
 `;
 
+const SubText = styled.span`
+  color: rgb(130, 130, 130);
+  font-size: 3vmin;
+  font-weight: bold;
+`;
+
 interface HeaderProps {
-  text: string;
+  title: string;
+  desc: string;
 };
 
 const Header = (props: HeaderProps) => {
-  const { text } = props;
+  const { title, desc } = props;
 
   return (
     <Layout>
       <TextLayout>
-        <Text>{text}</Text>
+        <Text>{title}</Text>
+        <SubText>{desc}</SubText>
       </TextLayout>
     </Layout>
   );

@@ -12,13 +12,13 @@ import useEventTimeout from "../hooks/useEventTimeout";
 const Layout = styled.div`
   width: 100vw;
   height: 100vh;
-  background: ${Colors.Background};
+  background: ${Colors.White};
 `;
 
 const Navigations = () => {
   const navigation = useNavigate();
   
-  useEventTimeout(() => navigation('/'));
+  // useEventTimeout(() => navigation('/'));
 
   return (
     <Layout className="main" >

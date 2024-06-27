@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import useDataStore from "../store/useDataStore";
-import { Layout } from "../utils/styles/Common";
+import { Layout } from "../assets/css/common";
 import Lottie from "lottie-react";
 import LottieData from "../assets/lottie/loading.json";
 import ParkingMark from "../assets/imgs/parking_marker.png";
@@ -15,6 +15,30 @@ let cvs: Element | null;
 let idx = 0;
 
 const Canvas = styled.div``;
+
+const InfoLayout = styled.div`
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 22%;
+  left: 0;
+  z-index: 1001;
+`;
+
+const Infomation = styled.span`
+  font-size: 3vmin;
+  font-weight: bold;
+  color: ${Colors.Black};
+`;
+
+const ParkingPositionText = styled.span`
+  font-size: 3vmin;
+  font-weight: bold;
+  color: ${Colors.Red};
+`;
 
 const Floor = styled.div`
   position: absolute;
@@ -61,22 +85,33 @@ interface PointProps {
 type ImageState = "first" | "waitting" | "second" | "";
 
 const FindRoute = (props: CommonProps.ComponentProps) => {
-  const { mobile, pathInfo } = useDataStore();
+  const { mobile, pathInfo, selectCar } = useDataStore();
   const [ imgPath, setImgPath ] = useState("");
-  const [ rePoint, setRePoint ] = useState<PointProps[]>([]);
+  const [ convPt, setConvPt ] = useState<PointProps[]>([]);
   const [ imgState, setImgState ] = useState<ImageState>("");
   const [ markerPosition, setMarkerPosition ] = useState<PointProps>({x: 0, y: 0});
   const [ firstFloor, setFirstFloor ] = useState("");
   const [ secondFloor, setSecondFloor ] = useState("");
   const [ floor, setFloor ] = useState("");
+  const [ title, setTitle ] = useState("");
+  const [ desc, setDesc ] = useState("");
   let i = 0;
   let raf: number;
 
   useEffect(() => {
-    if( !pathInfo ) {
-      props.navigation("/");
+    if( !pathInfo.length ) props.navigation("/");
+  }, [pathInfo]);
+
+  useEffect(() => {
+    if( mobile ) {
+      setTitle("키오스크 위치안내");
+      setDesc("현재 위치에서 가장 가까운 키오스크까지 이동경로를 안내합니다");
+      return;
     }
-  }, [pathInfo, props]);
+
+    setTitle("차량 위치안내");
+    setDesc("현재 위치에서 고객님의 차량 위치까지 이동경로를 안내합니다");
+  }, []);
 
   /**
    * 캔버스 생성 및 길찾기 정보 초기화 함수
@@ -87,7 +122,7 @@ const FindRoute = (props: CommonProps.ComponentProps) => {
    * convertCoordinates : 서버로 부터 받은 노드 좌표 변환 (이미지 사이즈와 캔버스 사이즈의 비율에 따라 변환)
    * setImgPath : 화면에 보여지는 주차장 이미지 세팅
    */
-  const init = () => {
+  const init = useCallback(() => {
     cvs = document.querySelector(".canvas-layout");
     width = document.querySelector(".image")?.clientWidth as number;
 
@@ -97,7 +132,8 @@ const FindRoute = (props: CommonProps.ComponentProps) => {
           id="canvas"
           width=${width} 
           height=${width} 
-          style="position: relative; z-index: 1000;"></canvas>
+          style="position: relative; z-index: 1000;"
+        ></canvas>
       `;
 
       /**
@@ -113,7 +149,7 @@ const FindRoute = (props: CommonProps.ComponentProps) => {
       convertCoordinates(0, width);
       setImgPath(pathInfo[0].canvas_img);
     }
-  };
+  }, [firstFloor, floor, imgState, imgPath]);
 
   useEffect(() => {
     init();
@@ -127,15 +163,16 @@ const FindRoute = (props: CommonProps.ComponentProps) => {
    * @param index : 층 정보(pathInfo)가 여러 개인 경우 받아온 index 값을 구분해 해당 배열 index 좌표 값을 변환
    * @param wd : 생성한 캔버스 width
    */
-  const convertCoordinates = (index: number, wd: number) => {
+  const convertCoordinates = useCallback((index: number, wd: number) => {
     const magnification =  Number((wd / pathInfo[0].canvas.width));
+    const arr: PointProps[] = [];
 
-    if( rePoint.length > 0 ) {
-      rePoint.splice(0, rePoint.length);
+    if( convPt.length > 0 ) {
+      convPt.splice(0, convPt.length);
     }
 
     for(let j=0; j < pathInfo[index].path.length; j++) {
-      rePoint.push({
+      arr.push({
         x: Math.round(pathInfo[index].path[j].x * magnification),
         y: Math.round(pathInfo[index].path[j].y * magnification),
       });
@@ -147,7 +184,9 @@ const FindRoute = (props: CommonProps.ComponentProps) => {
         });
       }
     }
-  };
+
+    setConvPt(arr);
+  }, [convPt]);
 
   /**
    * 현 위치 마커 이미지를 표시하는 함수
@@ -159,7 +198,7 @@ const FindRoute = (props: CommonProps.ComponentProps) => {
    *  - 화면에 표시해줄 이미지 상태를 두 번째 주차장 이미지로 변경한다.
    *  - 두 번째 층 좌표를 변환한다.
    */
-  const tackLocationMarker = () => {
+  const tackLocationMarker = useCallback(() => {
     const canvas = document.querySelector("#canvas") as HTMLCanvasElement;
     const ctx = canvas?.getContext("2d");
 
@@ -178,7 +217,7 @@ const FindRoute = (props: CommonProps.ComponentProps) => {
         clearTimeout(timer);
       }, 2000);
     }
-  };
+  }, [imgState, imgPath, floor]);
 
   /**
    * 변환된 좌표 값으로 캔버스 위에 선을 그리는 함수
@@ -199,10 +238,10 @@ const FindRoute = (props: CommonProps.ComponentProps) => {
 
       if (i < 1) {
         ctx.beginPath();
-        ctx.moveTo(rePoint[i].x, rePoint[i].y);
+        ctx.moveTo(convPt[i].x, convPt[i].y);
       }
 
-      if (i >= rePoint.length-1) {
+      if (i >= convPt.length-1) {
         cancelAnimationFrame(raf);
         let img;
 
@@ -217,7 +256,7 @@ const FindRoute = (props: CommonProps.ComponentProps) => {
         return;
 
       } else {
-        ctx.lineTo(rePoint[i+1].x, rePoint[i+1].y);
+        ctx.lineTo(convPt[i+1].x, convPt[i+1].y);
         ctx.stroke();
         i++;
       }
@@ -250,7 +289,12 @@ const FindRoute = (props: CommonProps.ComponentProps) => {
 
   return (
     <Layout>
-      <Header text="위치안내" /> 
+      <Header title={title} desc={desc} />
+      <InfoLayout>
+        <Infomation>고객님의 차량은&nbsp;</Infomation>
+        <ParkingPositionText>{`${selectCar.flor_nm.replace("P", "B")}층 '${selectCar.column_nm}' 기둥사이`}</ParkingPositionText>
+        <Infomation>{`\n에 주차되어 있습니다.`}</Infomation>
+      </InfoLayout>
       <Canvas className="canvas-layout"></Canvas>
       {imgState === "waitting" ?
         <LottieLayout>
@@ -285,7 +329,7 @@ const FindRoute = (props: CommonProps.ComponentProps) => {
           alt="Location Marker"
         />
       </div>
-      <Footer text="주차정보" prev="/kiosk/info" />
+      <Footer text="주차정보" prev="/kiosk/select" />
     </Layout>
   );
 };

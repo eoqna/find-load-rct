@@ -2,15 +2,17 @@ import styled from "styled-components";
 import Icon from '@mdi/react';
 import { mdiChevronLeft, mdiHome } from '@mdi/js';
 import { useNavigate } from "react-router";
+import { Colors } from "../utils/colors";
 
-const Layout = styled.div`
+const Layout = styled.footer`
   display: flex;
-  width: 100%;
+  width: calc(100% - 20px);
   height: 7%;
+  padding: 0 10px;
   justify-content: space-between;
   align-items: center;
   position: absolute;
-  background: rgb(59, 58, 66);
+  background: ${Colors.Primary};
   bottom: 0;
   left: 0;
   z-index: 100;
@@ -23,11 +25,12 @@ const ButtonLayout = styled.div`
 `;
 
 const Button = styled.button`
-  background: rgb(59, 58, 66);
+  background: ${Colors.Primary};
   color: #fff;
   font-size: 3vmin;
+  font-weight: bold;
   border: 0;
-  padding: 0;
+  padding: 0 0 0 4px;
   cursor: pointer;
 `;
 
@@ -60,15 +63,9 @@ const Footer = (props: FooterProps) => {
         <>
           <ButtonLayout onClick={onClickPrev}>
             <Icon path={mdiChevronLeft} size={1} color="#fff" />
-            <Button>
-              {text}
-            </Button>
           </ButtonLayout>
           <ButtonLayout onClick={onClickMain}>
             <Icon path={mdiHome } size={1} color="#fff" />
-            <Button style={{ padding: "0 10px 0 5px" }}>
-              처음으로
-            </Button>
           </ButtonLayout>
         </>
       }

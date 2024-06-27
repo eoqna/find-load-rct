@@ -11,9 +11,7 @@ declare namespace ApiResponse {
     img_path: string;
     node_id: string;
     flor_nm: string;
-    flor_img_path?: string;
-    position_x: number;
-    position_y: number;
+    column_nm: string;
   }
 
   interface PathInfo {

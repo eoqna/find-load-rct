@@ -3,7 +3,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import useDataStore from "../store/useDataStore";
 import axiosClient from "../utils/axiosClient";
-import { Layout } from "../utils/styles/Common";
+import { Layout } from "../assets/css/common";
 import useAppStore from "../store/useAppStore";
 import { Colors } from "../utils/colors";
 import { useEffect } from "react";
@@ -53,14 +53,17 @@ const Label = styled.p`
 `;
 
 const Text = styled.p`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 75%;
+  height: calc(80% - 10px);
   padding: 5px 0;
   border-radius: 5px;
   color: #fff;
-  text-align: center;
   background: #006eb6;
   font-weight: bold;
-  font-size: 2.5vmin;
+  font-size: 3vmin;
   margin: 0;
 `;
 
@@ -112,13 +115,12 @@ const ParkingInfo = (props: CommonProps.ComponentProps) => {
       url = "/api/mobile/beta/parking/find-route";
       param = {
         start_node: selectCar.node_id,
-        flor_nm: selectCar.flor_nm,
       };
     } else {
       url = "/api/kiosk/beta/parking/find-route";
       param = {
-        rotate: 0,
-        start_node: "K20001",
+        rotate: 90,
+        start_node: "K20002",
         end_node: selectCar.node_id,
       };
     }
@@ -138,7 +140,7 @@ const ParkingInfo = (props: CommonProps.ComponentProps) => {
 
   return (
     <Layout>
-      <Header text="주차정보" />
+      <Header title="주차정보" desc="주차 정보를 확인해 주세요" />
       <CarInfoLayout>
         <CarImage
           src={selectCar.img_path}

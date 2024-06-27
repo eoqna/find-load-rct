@@ -1,16 +1,16 @@
 import styled from "styled-components";
-import { Layout, Title } from "../utils/styles/Common";
+import { Layout, Title } from "../assets/css/common";
 import { useState } from "react";
 import axiosClient from "../utils/axiosClient";
 import useDataStore from "../store/useDataStore";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import { mdiCloseBox } from '@mdi/js';
-import { InputLayout, NumberPad, NumberPadLayout } from "../utils/styles/NumberPad";
+import { InputLayout, NumberPad, NumberPadLayout } from "../assets/css/numberPad";
 import Icon from "@mdi/react";
-import { numbers } from "../utils/temp";
 import useAppStore from "../store/useAppStore";
 import { CommonProps } from "../navigation";
+import { numbers } from "../contants/input";
 
 const Input = styled.input`
   width: 100%;
@@ -64,13 +64,13 @@ const InputKioskInfo = (props: CommonProps.ComponentProps) => {
 
   return (
     <Layout>
-      <Header text="차량번호 입력" />
+      <Header title="키오스크 ID 입력"  desc="키오스크 ID를 입력해주세요" />
       <Title>키오스크 ID를 입력해 주세요</Title>
       <InputLayout>
         <Input type="text" readOnly value={floor} maxLength={2} minLength={1} />
       </InputLayout>
       <NumberPadLayout>
-        {numbers.map((item) => {
+        {/* {numbers.map((item) => {
           return (
             item === 10 ?
               (
@@ -96,7 +96,7 @@ const InputKioskInfo = (props: CommonProps.ComponentProps) => {
                   <NumberPad key={item} onClick={(e) => onClickNumber(e.currentTarget.innerHTML)}>{item}</NumberPad>
               )
           );
-          })}
+          })} */}
       </NumberPadLayout>
       <Footer />
     </Layout>
