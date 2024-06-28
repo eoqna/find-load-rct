@@ -1,68 +1,68 @@
 interface InputProps {
   idx: number;
-  value: string;
-}
+  text: string;
+};
 
-export const inputValue = [
+export const inputValue: InputProps[] = [
   {
     idx: 0,
-    value: "first",
+    text: "first",
   },
   {
     idx: 1,
-    value: "second",
+    text: "second",
   },
   {
     idx: 2,
-    value: "third",
+    text: "third",
   },
   {
     idx: 3,
-    value: "fourth",
+    text: "fourth",
   },
 ];
 
-export const numbers = [
+export const numbers: InputProps[][] = [
   [
     {
       idx: 0,
-      value: "1",
+      text: "1",
     },
     {
       idx: 1,
-      value: "2",
+      text: "2",
     },
     {
       idx: 2,
-      value: "3",
+      text: "3",
     },
   ],
   [
     {
       idx: 0,
-      value: "4",
+      text: "4",
     },
     {
       idx: 1,
-      value: "5",
+      text: "5",
     },
     {
       idx: 2,
-      value: "6",
+      text: "6",
     },
   ],
   [
     {
       idx: 0,
-      value: "7",
+      text: "7",
     },
     {
       idx: 1,
-      value: "8",
+      text: "8",
     },
     {
       idx: 2,
-      value: "9",
+      text: "9",
     },
   ],
 ];

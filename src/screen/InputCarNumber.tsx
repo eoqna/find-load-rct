@@ -1,14 +1,13 @@
 import { useCallback, useEffect, useState } from "react";
 import useDataStore from "../store/useDataStore";
 import Icon from '@mdi/react';
-import { mdiCloseBox, mdiCloseThick } from '@mdi/js';
+import { mdiCloseThick } from '@mdi/js';
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import axiosClient from "../utils/axiosClient";
 import useAppStore from "../store/useAppStore";
 import { Layout } from "../assets/css/common";
 import { InputLayout, Input, NumberPad, NumberPadLayout, NumberPadGroupLayout } from "../assets/css/numberPad";
-import { Colors } from "../utils/colors";
 import { CommonProps } from "../navigation";
 import { inputValue, numbers } from "../contants/input";
 
@@ -71,23 +70,21 @@ const InputCarNumber = (props: CommonProps.ComponentProps) => {
    * @param text : 사용자가 터치 한 숫자
    */
   const onClickNumber = useCallback((text: string) => {
-    const len = carNumber.length;
+    if( carNumber.length >= 4 ) return;
 
-    switch (len) {
+    setCarNumber(prev => prev + text);
+
+    switch (carNumber.length) {
       case 0:
-        setCarNumber(carNumber + text);
         setInputs({...inputs, first: text});
         break;
       case 1:
-        setCarNumber(carNumber + text);
         setInputs({...inputs, second: text});
         break;
       case 2:
-        setCarNumber(carNumber + text);
         setInputs({...inputs, third: text});
         break;
       case 3:
-        setCarNumber(carNumber + text);
         setInputs({...inputs, fourth: text});
         break;
       default:
@@ -101,23 +98,21 @@ const InputCarNumber = (props: CommonProps.ComponentProps) => {
    * 입력된 차량 번호의 길이에 따라 맨 뒤의 값 부터 삭제한다.
    */
   const onClickCancel = useCallback(() => {
-    const len = carNumber.length;
+    if( carNumber.length <= 0 ) return;
 
-    switch (len) {
+    setCarNumber(prev => prev.substring(0, prev.length-1));
+
+    switch (carNumber.length) {
       case 1:
-        setCarNumber(carNumber.substring(0, carNumber.length - 1));
         setInputs({...inputs, first: ""});
         break;
       case 2:
-        setCarNumber(carNumber.substring(0, carNumber.length - 1));
         setInputs({...inputs, second: ""});
         break;
       case 3:
-        setCarNumber(carNumber.substring(0, carNumber.length - 1));
         setInputs({...inputs, third: ""});
         break;
       case 4:
-        setCarNumber(carNumber.substring(0, carNumber.length - 1));
         setInputs({...inputs, fourth: ""});
         break;
     }
@@ -184,9 +179,9 @@ const InputCarNumber = (props: CommonProps.ComponentProps) => {
       <NumberPadLayout>
         {numbers.map((v, i) => (
           <NumberPadGroupLayout key={i}>
-            <NumberPad mode="default" onClick={(e) => onClickNumber(e.currentTarget.innerHTML)}>{v[0].value}</NumberPad>
-            <NumberPad mode="default" onClick={(e) => onClickNumber(e.currentTarget.innerHTML)}>{v[1].value}</NumberPad>
-            <NumberPad mode="default" onClick={(e) => onClickNumber(e.currentTarget.innerHTML)}>{v[2].value}</NumberPad>
+            <NumberPad mode="default" onClick={(e) => onClickNumber(e.currentTarget.innerHTML)}>{v[0].text}</NumberPad>
+            <NumberPad mode="default" onClick={(e) => onClickNumber(e.currentTarget.innerHTML)}>{v[1].text}</NumberPad>
+            <NumberPad mode="default" onClick={(e) => onClickNumber(e.currentTarget.innerHTML)}>{v[2].text}</NumberPad>
           </NumberPadGroupLayout>
         ))}
         <NumberPadGroupLayout>

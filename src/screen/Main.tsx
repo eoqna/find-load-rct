@@ -1,15 +1,13 @@
 import { useCallback, useState } from "react";
 import styled from "styled-components";
-import moment from "moment";
-import useDataStore from "../store/useDataStore";
 import { CommonProps } from "../navigation";
 import useInterval from "../hooks/useInterval";
 import { images } from "../utils/temp";
 
-const Layout = styled.div<{ bg: string }>`
+const Layout = styled.div<{ $bg: string }>`
   width: 100%;
   height: 100%;
-  background: url(${(props) => props.bg});
+  background: url(${(props) => props.$bg});
   background-size: cover;
   background-position: center center;
   display: flex;
@@ -17,20 +15,6 @@ const Layout = styled.div<{ bg: string }>`
   justify-content: end;
   align-items: center;
   color: rgba(0, 0, 0, 0.7);
-`;
-
-const TimeLayout = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding-top: 5vmin;
-`;
-
-const Time = styled.p`
-  padding: 0;
-  margin: 0;
-  font-size: 8vmin;
-  font-weight: bold;
 `;
 
 const BottomLayout = styled.div`
@@ -66,7 +50,7 @@ const Main = (props: CommonProps.ComponentProps) => {
 
   return (
     <Layout
-      bg={images[activeIndex]}
+      $bg={images[activeIndex]}
       onClick={onClickBackground}
     >
       <BottomLayout>

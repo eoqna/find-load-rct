@@ -171,7 +171,7 @@ const FindRoute = (props: CommonProps.ComponentProps) => {
       convPt.splice(0, convPt.length);
     }
 
-    for(let j=0; j < pathInfo[index].path.length; j++) {
+    for(let j = 0; j < pathInfo[index].path.length; j++) {
       arr.push({
         x: Math.round(pathInfo[index].path[j].x * magnification),
         y: Math.round(pathInfo[index].path[j].y * magnification),
@@ -278,13 +278,15 @@ const FindRoute = (props: CommonProps.ComponentProps) => {
   const onLoadBackgroundImage = () => {
     if ( pathInfo.length <= 1 ) {
       drawLine();
-    } else {
-      if ( idx === 0 ) {
-        tackLocationMarker();
-      } else {
-        drawLine();
-      }
+      return;
     }
+
+    if ( idx === 0 ) {
+      tackLocationMarker();
+      return;
+    }
+
+    drawLine();
   };
 
   return (
