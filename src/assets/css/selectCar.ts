@@ -40,9 +40,9 @@ export const CarNumber = styled.p`
   width: 100%;
   align-items: center;
   color: ${Colors.Primary};
-  font-size: 1.6rem;
+  font-size: 7vmin;
   font-weight: bold;
-  margin: 0;
+  margin: 0 0 4px;
 `;
 
 export const CarInfoColumn = styled.div`
@@ -50,14 +50,15 @@ export const CarInfoColumn = styled.div`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 4px;
 `;
 
 export const Label = styled.p`
   display: flex;
   align-items: center;
-  font-size: 0.7rem;
+  font-size: 3vmin;
   font-weight: bold;
-  margin: 0 0 3px 0;
+  margin: 0;
 `;
 
 export const Text = styled.p`
@@ -70,7 +71,7 @@ export const Text = styled.p`
   color: #fff;
   background: #006eb6;
   font-weight: bold;
-  font-size: 0.7rem;
+  font-size: 2.8vmin;
 `;
 
 export const LocationInfoButtonLayout = styled.div`

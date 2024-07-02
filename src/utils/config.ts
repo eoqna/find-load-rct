@@ -1,1 +1,1 @@
-export const SERVER_URL = "http://rnd.daontec.co.kr:20001";
+export const SERVER_URL = "http://rnd.daontec.co.kr:8080";

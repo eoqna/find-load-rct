@@ -11,9 +11,9 @@ export const Layout = styled.div`
 `;
 
 export const Title = styled.h2`
-padding: 0;
-font-size: 5vmin;
-font-weight: 100;
-color: #fff;
-margin: 0 0 5vmin 0;
+  padding: 0;
+  font-size: 5vmin;
+  font-weight: 100;
+  color: #fff;
+  margin: 0 0 5vmin 0;
 `;

@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { Colors } from "../utils/colors";
 
-const Layout = styled.div`
+const Layout = styled.header`
   display: flex;
   width: 100%;
   justify-content: space-between;

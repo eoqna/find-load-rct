@@ -23,7 +23,6 @@ const InfoLayout = styled.div`
   justify-content: center;
   align-items: center;
   position: absolute;
-  top: 22%;
   left: 0;
   z-index: 1001;
 `;
@@ -125,8 +124,11 @@ const FindRoute = (props: CommonProps.ComponentProps) => {
   const init = useCallback(() => {
     cvs = document.querySelector(".canvas-layout");
     width = document.querySelector(".image")?.clientWidth as number;
+    const infoLayout = document.querySelector(".info-layout") as HTMLElement;
 
     if( cvs && width ) {
+      infoLayout.style.top = `calc(50% - ${width / 2 + 30}px)`;
+
       cvs.innerHTML += `
         <canvas 
           id="canvas"
@@ -292,7 +294,7 @@ const FindRoute = (props: CommonProps.ComponentProps) => {
   return (
     <Layout>
       <Header title={title} desc={desc} />
-      <InfoLayout>
+      <InfoLayout className="info-layout">
         <Infomation>고객님의 차량은&nbsp;</Infomation>
         <ParkingPositionText>{`${selectCar.flor_nm.replace("P", "B")}층 '${selectCar.column_nm}' 기둥사이`}</ParkingPositionText>
         <Infomation>{`\n에 주차되어 있습니다.`}</Infomation>
