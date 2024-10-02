@@ -179,15 +179,15 @@ const InputCarNumber = (props: CommonProps.ComponentProps) => {
       <NumberPadLayout>
         {numbers.map((v, i) => (
           <NumberPadGroupLayout key={i}>
-            <NumberPad mode="default" onClick={(e) => onClickNumber(e.currentTarget.innerHTML)}>{v[0].text}</NumberPad>
-            <NumberPad mode="default" onClick={(e) => onClickNumber(e.currentTarget.innerHTML)}>{v[1].text}</NumberPad>
-            <NumberPad mode="default" onClick={(e) => onClickNumber(e.currentTarget.innerHTML)}>{v[2].text}</NumberPad>
+            <NumberPad $default onClick={(e) => onClickNumber(e.currentTarget.innerHTML)}>{v[0].text}</NumberPad>
+            <NumberPad $default onClick={(e) => onClickNumber(e.currentTarget.innerHTML)}>{v[1].text}</NumberPad>
+            <NumberPad $default onClick={(e) => onClickNumber(e.currentTarget.innerHTML)}>{v[2].text}</NumberPad>
           </NumberPadGroupLayout>
         ))}
         <NumberPadGroupLayout>
-          <NumberPad mode="control" onClick={onClickCancel}><Icon path={mdiCloseThick} size={"1.5rem"} /></NumberPad>
-          <NumberPad mode="default" onClick={(e) => onClickNumber(e.currentTarget.innerHTML)}>0</NumberPad>
-          <NumberPad mode="control" onClick={onSubmit}>확인</NumberPad>
+          <NumberPad onClick={onClickCancel}><Icon path={mdiCloseThick} size={"1.5rem"} /></NumberPad>
+          <NumberPad $default onClick={(e) => onClickNumber(e.currentTarget.innerHTML)}>0</NumberPad>
+          <NumberPad onClick={onSubmit}>확인</NumberPad>
         </NumberPadGroupLayout>
       </NumberPadLayout>
       <Footer />

@@ -43,7 +43,7 @@ const SelectCar = (props: CommonProps.ComponentProps) => {
     } else {
       url = "/api/kiosk/beta/parking/find-route";
       param = {
-        rotate: 90,
+        rotate: 0,
         start_node: "K20002",
         end_node: item.node_id,
       };
@@ -80,7 +80,7 @@ const SelectCar = (props: CommonProps.ComponentProps) => {
             </CarInfoColumn>
           </CarInfo>
           <LocationInfoButtonLayout onClick={() => onClickFindRoute(item)}>
-            <Icon path={mdiMapMarker} size={1} color={Colors.White} />
+            <Icon path={mdiMapMarker} size="5vmin" color={Colors.White} />
             <ButtonText>위치안내</ButtonText>
           </LocationInfoButtonLayout>
         </CarListLayout>

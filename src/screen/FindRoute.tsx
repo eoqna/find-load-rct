@@ -50,7 +50,7 @@ const Floor = styled.div`
 
 const ParkingImage = styled.img`
   position: absolute;
-  width: 90%;
+  width: 95%;
 `;
 
 const LottieLayout = styled.div`
@@ -81,7 +81,7 @@ interface PointProps {
   y: number;
 };
 
-type ImageState = "first" | "waitting" | "second" | "";
+type ImageState = "first" | "waiting" | "second" | "";
 
 const FindRoute = (props: CommonProps.ComponentProps) => {
   const { mobile, pathInfo, selectCar } = useDataStore();
@@ -211,7 +211,7 @@ const FindRoute = (props: CommonProps.ComponentProps) => {
 
       const timer = setTimeout(() => {
         ctx.clearRect(0, 0, 4000, 4000);
-        setImgState("waitting");
+        setImgState("waiting");
         setImgPath(pathInfo[1].canvas_img);
         setFloor(pathInfo[1].canvas_img.substring(pathInfo[1].canvas_img.lastIndexOf("/")).split("_")[1]);
         convertCoordinates(1, Number(width));
@@ -300,7 +300,7 @@ const FindRoute = (props: CommonProps.ComponentProps) => {
         <Infomation>{`\n에 주차되어 있습니다.`}</Infomation>
       </InfoLayout>
       <Canvas className="canvas-layout"></Canvas>
-      {imgState === "waitting" ?
+      {imgState === "waiting" ?
         <LottieLayout>
           <LottieView
             loop={2}

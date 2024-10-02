@@ -40,7 +40,7 @@ export const CarNumber = styled.p`
   width: 100%;
   align-items: center;
   color: ${Colors.Primary};
-  font-size: 7vmin;
+  font-size: 6vmin;
   font-weight: bold;
   margin: 0 0 4px;
 `;
@@ -87,7 +87,7 @@ export const LocationInfoButtonLayout = styled.div`
 `;
 
 export const ButtonText = styled.span`
-  font-size: 0.6rem;
+  font-size: 3vmin;
   font-weight: bold;
   color: ${Colors.White};
   margin: 4px 0 0 0;

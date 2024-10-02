@@ -15,7 +15,7 @@ export const InputLayout = styled.div`
 export const Input = styled.input`
   width: 20%;
   height: 10vh;
-  font-size: 1.8rem;
+  font-size: 4vmin;
   color: #006eb6;
   font-weight: bold;
   text-align: center;
@@ -37,22 +37,22 @@ export const NumberPadGroupLayout = styled.div`
   width: 100%;
 `;
 
-export const NumberPad = styled.button<{ mode: string }>`
+export const NumberPad = styled.button<{ $default?: boolean }>`
   width: 33.33%;
   height: 8vh;
   margin: 5px;
   padding: 0;
   text-align: center;
   font-weight: bold;
-  ${(props) => props.mode === "default" 
+  ${({ $default }) => $default
     ? `border: 1px solid ${Colors.DarkGray};
        color: ${Colors.DarkGray};
-       font-size: 1.5rem;
+       font-size: 4vmin;
        background: ${Colors.White};
       `
     : `border: 1px solid ${Colors.DarkGray};
        color: ${Colors.White};
-       font-size: 1.3rem;
+       font-size: 4vmin;
        background: ${Colors.Primary};
       `
   }

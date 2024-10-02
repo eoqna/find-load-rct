@@ -62,10 +62,10 @@ const Footer = (props: FooterProps) => {
       {text &&
         <>
           <ButtonLayout onClick={onClickPrev}>
-            <Icon path={mdiChevronLeft} size={1} color="#fff" />
+            <Icon path={mdiChevronLeft} size="5vmin" color="#fff" />
           </ButtonLayout>
           <ButtonLayout onClick={onClickMain}>
-            <Icon path={mdiHome } size={1} color="#fff" />
+            <Icon path={mdiHome } size="5vmin" color="#fff" />
           </ButtonLayout>
         </>
       }
