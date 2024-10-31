@@ -4,13 +4,12 @@ import { Colors } from "../utils/colors";
 const Layout = styled.header`
   display: flex;
   width: 100%;
-  justify-content: space-between;
   align-items: center;
   position: absolute;
   background: ${Colors.White};
   top: 0;
   left: 0;
-  z-index: 100;
+  z-index: 1001;
 `;
 
 const TextLayout = styled.div`
@@ -21,16 +20,18 @@ const TextLayout = styled.div`
   padding: 20px 20px 0;
 `;
 
-const Text = styled.span`
+const Text = styled.p`
   color: ${Colors.Black};
   font-size: 4vmin;
   font-weight: bold;
+  margin: 0;
 `;
 
-const SubText = styled.span`
+const SubText = styled.p`
   color: rgb(130, 130, 130);
   font-size: 3vmin;
   font-weight: bold;
+  margin: 8px 0px 0px 0px;
 `;
 
 interface HeaderProps {
@@ -42,7 +43,7 @@ const Header = (props: HeaderProps) => {
   const { title, desc } = props;
 
   return (
-    <Layout>
+    <Layout id="header-layout">
       <TextLayout>
         <Text>{title}</Text>
         <SubText>{desc}</SubText>

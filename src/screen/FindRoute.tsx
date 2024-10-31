@@ -1,33 +1,26 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import useDataStore from "../store/useDataStore";
-import { Layout } from "../assets/css/common";
 import Lottie from "lottie-react";
 import LottieData from "../assets/lottie/loading.json";
 import ParkingMark from "../assets/imgs/parking_marker.png";
-import LocationMark from "../assets/imgs/location_marker.png";
+import KioskMark from "../assets/imgs/kiosk_marker.png";
 import { Colors } from "../utils/colors";
 import { CommonProps } from "../navigation";
-let width: number;
-let cvs: Element | null;
-let idx = 0;
+import { Layout } from "../assets/css/common";
 
 const Canvas = styled.div``;
 
 const InfoLayout = styled.div`
-  display: flex;
-  width: 100%;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
   position: absolute;
-  left: 0;
-  z-index: 1001;
+  width: 100%;
+  top: calc(0px - 3vmin - 20px);
+  text-align: center;
 `;
 
-const Infomation = styled.span`
+const Information = styled.span`
   font-size: 3vmin;
   font-weight: bold;
   color: ${Colors.Black};
@@ -41,16 +34,22 @@ const ParkingPositionText = styled.span`
 
 const Floor = styled.div`
   position: absolute;
-  left: 8vw;
-  top: 30%;
+  top: 10px;
+  left: 10px;
+  color: ${Colors.Black};
   font-size: 4vmin;
   font-weight: bold;
   z-index: 1001;
 `;
 
-const ParkingImage = styled.img`
+const ParkingImageLayout = styled.div`
   position: absolute;
   width: 95%;
+`;
+
+const ParkingImage = styled.img`
+  width: 100%;
+  height: 100%;
 `;
 
 const LottieLayout = styled.div`
@@ -66,50 +65,61 @@ const LottieView = styled(Lottie)`
 const LottieText = styled.p`
   position: absolute;
   font-weight: bold;
-  font-size: 4.5vmin;
-  color: ${Colors.White};
-  z-index: 100;
+  font-size: 3vmin;
+  color: ${Colors.Black};
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   margin: 0;
-  padding-bottom: 5px;
 `;
+
+const MarkerLayout = styled.div`
+  display: none;
+`;
+
+const Marker = styled.img``;
 
 interface PointProps {
   x: number;
   y: number;
 };
 
+interface FloorInfoProps {
+  state: ImageState;
+  floor_nm: string;
+  img_path: string;
+};
+
+interface FloorNameProps {
+  first_floor: string;
+  second_floor: string;
+};
+
 type ImageState = "first" | "waiting" | "second" | "";
 
 const FindRoute = (props: CommonProps.ComponentProps) => {
+  const { navigation } = props;
   const { mobile, pathInfo, selectCar } = useDataStore();
-  const [ imgPath, setImgPath ] = useState("");
+  const [ floorInfo, setFloorInfo ] = useState<FloorInfoProps>({ state: "", floor_nm: "", img_path: "" });
+  const [ width, setWidth ] = useState(0);
   const [ convPt, setConvPt ] = useState<PointProps[]>([]);
-  const [ imgState, setImgState ] = useState<ImageState>("");
   const [ markerPosition, setMarkerPosition ] = useState<PointProps>({x: 0, y: 0});
-  const [ firstFloor, setFirstFloor ] = useState("");
-  const [ secondFloor, setSecondFloor ] = useState("");
-  const [ floor, setFloor ] = useState("");
-  const [ title, setTitle ] = useState("");
-  const [ desc, setDesc ] = useState("");
-  let i = 0;
+  const [ floorName, setFloorName ] = useState<FloorNameProps>({ first_floor: "", second_floor: "" });
+  const [ title, setTitle ] = useState("차량 위치안내");
+  const [ desc, setDesc ] = useState("현재 위치에서 고객님의 차량 위치까지 이동경로를 안내합니다");
+  const [ idx, setIdx ] = useState(0);
+  const canvasRef = useRef<HTMLDivElement>(null);
+  const imgRef = useRef<HTMLDivElement>(null);
+  const parkingMarkerRef = useRef<HTMLImageElement>(null);
+  const kioskMarkerRef = useRef<HTMLImageElement>(null);
   let raf: number;
+  let i = 0;
 
   useEffect(() => {
-    if( !pathInfo.length ) props.navigation("/");
-  }, [pathInfo]);
-
-  useEffect(() => {
-    if( mobile ) {
+    if (mobile) {
       setTitle("키오스크 위치안내");
       setDesc("현재 위치에서 가장 가까운 키오스크까지 이동경로를 안내합니다");
-      return;
     }
-
-    setTitle("차량 위치안내");
-    setDesc("현재 위치에서 고객님의 차량 위치까지 이동경로를 안내합니다");
   }, []);
 
   /**
@@ -122,39 +132,31 @@ const FindRoute = (props: CommonProps.ComponentProps) => {
    * setImgPath : 화면에 보여지는 주차장 이미지 세팅
    */
   const init = useCallback(() => {
-    cvs = document.querySelector(".canvas-layout");
-    width = document.querySelector(".image")?.clientWidth as number;
-    const infoLayout = document.querySelector(".info-layout") as HTMLElement;
+    if (canvasRef.current && imgRef.current) {
+      const imgWidth = imgRef.current.clientWidth;
 
-    if( cvs && width ) {
-      infoLayout.style.top = `calc(50% - ${width / 2 + 30}px)`;
-
-      cvs.innerHTML += `
+      canvasRef.current.innerHTML += `
         <canvas 
           id="canvas"
-          width=${width} 
-          height=${width} 
+          width=${imgWidth} 
+          height=${imgWidth} 
           style="position: relative; z-index: 1000;"
         ></canvas>
       `;
 
-      /**
-       * 층 간 이동이 발생하는 경우(키오스크층과 주차층이 다른 경우)에 층 이동 화면에 사용할 층 정보를 넣어준다.
-       */
-      if (pathInfo.length > 1) {
-        setSecondFloor(pathInfo[1].canvas_img.substring(pathInfo[1].canvas_img.lastIndexOf("/")).split("_")[1]);
-      }
-
-      setFirstFloor(pathInfo[0].canvas_img.substring(pathInfo[0].canvas_img.lastIndexOf("/")).split("_")[1]);
-      setFloor(pathInfo[0].canvas_img.substring(pathInfo[0].canvas_img.lastIndexOf("/")).split("_")[1]);
-      setImgState("first");
-      convertCoordinates(0, width);
-      setImgPath(pathInfo[0].canvas_img);
+      setWidth(imgWidth);
+      setFloorName({ ...floorName, first_floor: pathInfo[0].flor_nm });
+      setFloorInfo({ state: "first", floor_nm: pathInfo[0].flor_nm, img_path: pathInfo[0].canvas_img });
+      convertCoordinates(0, imgWidth);
     }
-  }, [firstFloor, floor, imgState, imgPath]);
+  }, [floorInfo, floorName, width]);
 
   useEffect(() => {
-    init();
+    if (!pathInfo.length) {
+      navigation("/");
+    } else {
+      init();
+    }
   }, []);
 
   /**
@@ -169,17 +171,17 @@ const FindRoute = (props: CommonProps.ComponentProps) => {
     const magnification =  Number((wd / pathInfo[0].canvas.width));
     const arr: PointProps[] = [];
 
-    if( convPt.length > 0 ) {
+    if (convPt.length > 0) {
       convPt.splice(0, convPt.length);
     }
 
-    for(let j = 0; j < pathInfo[index].path.length; j++) {
+    for (let j = 0; j < pathInfo[index].path.length; j++) {
       arr.push({
         x: Math.round(pathInfo[index].path[j].x * magnification),
         y: Math.round(pathInfo[index].path[j].y * magnification),
       });
 
-      if( j === pathInfo[index].path.length-1 ) {
+      if (j === pathInfo[index].path.length - 1) {
         setMarkerPosition({
           x: Math.round(pathInfo[index].path[j].x * magnification - 4.5),
           y: Math.round(pathInfo[index].path[j].y * magnification - 7)
@@ -205,21 +207,20 @@ const FindRoute = (props: CommonProps.ComponentProps) => {
     const ctx = canvas?.getContext("2d");
 
     if (ctx) {
-      const img = document?.getElementById("location_img") as HTMLImageElement;
+      const img = kioskMarkerRef.current as HTMLImageElement;
       ctx.drawImage(img, markerPosition.x, markerPosition.y);
-      idx++;
+      setIdx((prev) => prev + 1);
 
       const timer = setTimeout(() => {
         ctx.clearRect(0, 0, 4000, 4000);
-        setImgState("waiting");
-        setImgPath(pathInfo[1].canvas_img);
-        setFloor(pathInfo[1].canvas_img.substring(pathInfo[1].canvas_img.lastIndexOf("/")).split("_")[1]);
-        convertCoordinates(1, Number(width));
+        setFloorName({...floorName, second_floor: pathInfo[1].flor_nm });
+        setFloorInfo({ ...floorInfo, state: "waiting" });
+        convertCoordinates(1, width);
 
         clearTimeout(timer);
-      }, 2000);
+      }, 3000);
     }
-  }, [imgState, imgPath, floor]);
+  }, [floorInfo]);
 
   /**
    * 변환된 좌표 값으로 캔버스 위에 선을 그리는 함수
@@ -236,7 +237,12 @@ const FindRoute = (props: CommonProps.ComponentProps) => {
       ctx.strokeStyle = Colors.Red;
       ctx.lineCap = "square";
       ctx.lineJoin = "round";
-      ctx.lineWidth = 2;
+
+      if (mobile) {
+        ctx.lineWidth = 2;
+      } else {
+        ctx.lineWidth = 4;
+      }
 
       if (i < 1) {
         ctx.beginPath();
@@ -247,14 +253,14 @@ const FindRoute = (props: CommonProps.ComponentProps) => {
         cancelAnimationFrame(raf);
         let img;
 
-        if( !mobile ) {
-          img = document?.getElementById("parking_img") as HTMLImageElement;
+        if (!mobile) {
+          img = parkingMarkerRef.current as HTMLImageElement;
         } else {
-          img = document?.getElementById("location_img") as HTMLImageElement;
+          img = kioskMarkerRef.current as HTMLImageElement;
         }
 
         ctx.drawImage(img, markerPosition.x, markerPosition.y);
-        idx = 0;
+        setIdx(0);
         return;
 
       } else {
@@ -278,12 +284,12 @@ const FindRoute = (props: CommonProps.ComponentProps) => {
    *  - idx 값이 0이 아닌 경우 drawLine() 함수를 호출한다.
    */
   const onLoadBackgroundImage = () => {
-    if ( pathInfo.length <= 1 ) {
+    if (pathInfo.length <= 1) {
       drawLine();
       return;
     }
 
-    if ( idx === 0 ) {
+    if (idx === 0) {
       tackLocationMarker();
       return;
     }
@@ -294,45 +300,44 @@ const FindRoute = (props: CommonProps.ComponentProps) => {
   return (
     <Layout>
       <Header title={title} desc={desc} />
-      <InfoLayout className="info-layout">
-        <Infomation>고객님의 차량은&nbsp;</Infomation>
-        <ParkingPositionText>{`${selectCar.flor_nm.replace("P", "B")}층 '${selectCar.column_nm}' 기둥사이`}</ParkingPositionText>
-        <Infomation>{`\n에 주차되어 있습니다.`}</Infomation>
-      </InfoLayout>
-      <Canvas className="canvas-layout"></Canvas>
-      {imgState === "waiting" ?
+      <Canvas ref={canvasRef}></Canvas>
+      {floorInfo.state === "waiting" ?
         <LottieLayout>
           <LottieView
             loop={2}
             animationData={LottieData}
-            onLoopComplete={() => setImgState("second")}
+            onLoopComplete={() => setFloorInfo({ state: "second", floor_nm: pathInfo[1].flor_nm, img_path: pathInfo[1].canvas_img })}
           />
-          <LottieText>{firstFloor} → {secondFloor} 이동중</LottieText>
+          <LottieText>{floorName.first_floor} → {floorName.second_floor} 이동중</LottieText>
         </LottieLayout>
           :
-        <>
-          <Floor>{floor}</Floor>
+        <ParkingImageLayout ref={imgRef}>
+          <InfoLayout>
+            <Information>고객님의 차량은&nbsp;</Information>
+            <ParkingPositionText>{`${selectCar.flor_nm}층 '${selectCar.column_nm}' 기둥사이`}</ParkingPositionText>
+            <Information>{`\n에 주차되어 있습니다.`}</Information>
+          </InfoLayout>
+          <Floor>{floorInfo.floor_nm}</Floor>
           <ParkingImage
-            id="image"
-            className="image"
-            src={imgPath}
+            
+            src={floorInfo.img_path}
             alt="Parking Image"
             onLoad={onLoadBackgroundImage}
           />
-        </>
+        </ParkingImageLayout>
       }
-      <div style={{display: "none"}}>
-        <img 
-          id="parking_img" 
+      <MarkerLayout>
+        <Marker 
+          ref={parkingMarkerRef}
           src={ParkingMark}
           alt="Parking Marker"
         />
-        <img 
-          id="location_img" 
-          src={LocationMark}
-          alt="Location Marker"
+        <Marker 
+          ref={kioskMarkerRef}
+          src={KioskMark}
+          alt="Kiosk Marker"
         />
-      </div>
+      </MarkerLayout>
       <Footer text="주차정보" prev="/kiosk/select" />
     </Layout>
   );

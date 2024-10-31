@@ -14,8 +14,8 @@ export const InputLayout = styled.div`
 
 export const Input = styled.input`
   width: 20%;
-  height: 10vh;
-  font-size: 4vmin;
+  height: 13vh;
+  font-size: 7vmin;
   color: #006eb6;
   font-weight: bold;
   text-align: center;
@@ -44,15 +44,14 @@ export const NumberPad = styled.button<{ $default?: boolean }>`
   padding: 0;
   text-align: center;
   font-weight: bold;
+  font-size: 4vmin;
   ${({ $default }) => $default
     ? `border: 1px solid ${Colors.DarkGray};
        color: ${Colors.DarkGray};
-       font-size: 4vmin;
        background: ${Colors.White};
       `
     : `border: 1px solid ${Colors.DarkGray};
        color: ${Colors.White};
-       font-size: 4vmin;
        background: ${Colors.Primary};
       `
   }

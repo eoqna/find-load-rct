@@ -19,6 +19,8 @@ interface PointProps {
 
 const defaultPathInfo: ApiResponse.PathInfo[] = [
   {
+    flor_nm: "P7",
+    flor_tp_nm: "일반",
     canvas: {
       width: 4000,
       height: 4000,

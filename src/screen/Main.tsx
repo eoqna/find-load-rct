@@ -1,31 +1,19 @@
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import styled from "styled-components";
 import { CommonProps } from "../navigation";
-import useInterval from "../hooks/useInterval";
-import { images } from "../utils/temp";
+import { Colors } from "../utils/colors";
 
-const Layout = styled.div<{ $bg: string }>`
+const Layout = styled.div`
   width: 100%;
   height: 100%;
-  background: url(${(props) => props.$bg});
-  background-size: cover;
-  background-position: center center;
+  background: ${Colors.White};
   display: flex;
-  flex-direction: column;
-  justify-content: end;
+  justify-content: center;
   align-items: center;
   color: rgba(0, 0, 0, 0.7);
 `;
 
-const BottomLayout = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding-bottom: 8vmin;
-`;
-
-const Bottom = styled.p`
+const Description = styled.p`
   padding: 0;
   margin: 0;
   font-size: 5vmin;
@@ -33,29 +21,35 @@ const Bottom = styled.p`
 `;
 
 const Main = (props: CommonProps.ComponentProps) => {
-  const [ activeIndex, setActiveIndex ] = useState(0);
+  const { navigation } = props;
   
-  const nextSlice = useCallback(() => {
-    if(activeIndex < images.length-1) setActiveIndex(activeIndex + 1);
-    else setActiveIndex(0);
-  }, [activeIndex]);
+  /**
+   * 광고 배너 자동 슬라이드 함수
+   */
+  // const [ activeIndex, setActiveIndex ] = useState(0);
+  
+  // const nextSlice = useCallback(() => {
+  //   if (activeIndex < images.length-1) {
+  //     setActiveIndex(activeIndex + 1);
+  //   } else {
+  //     setActiveIndex(0);
+  //   }
+  // }, [activeIndex]);
 
-  useInterval(() => {
-    nextSlice();
-  }, 1000 * 10);
+  /**
+   * 10초 마다 자동 슬라이드
+   */
+  // useInterval(() => {
+  //   nextSlice();
+  // }, 1000 * 10);
 
-  const onClickBackground = useCallback(() => {    
-    props.navigation("/kiosk/input");
+  const onPressBackground = useCallback(() => {    
+    navigation("/kiosk/input");
   }, []);
 
   return (
-    <Layout
-      $bg={images[activeIndex]}
-      onClick={onClickBackground}
-    >
-      <BottomLayout>
-        <Bottom>화면을 터치해 주세요</Bottom>
-      </BottomLayout>
+    <Layout onClick={onPressBackground}>
+      <Description>화면을 터치해 주세요</Description>
     </Layout>
   );
 };

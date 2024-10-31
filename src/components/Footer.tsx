@@ -3,11 +3,12 @@ import Icon from '@mdi/react';
 import { mdiChevronLeft, mdiHome } from '@mdi/js';
 import { useNavigate } from "react-router";
 import { Colors } from "../utils/colors";
+import { useCallback } from "react";
 
 const Layout = styled.footer`
   display: flex;
   width: calc(100% - 20px);
-  height: 7%;
+  height: 6%;
   padding: 0 10px;
   justify-content: space-between;
   align-items: center;
@@ -15,23 +16,13 @@ const Layout = styled.footer`
   background: ${Colors.Primary};
   bottom: 0;
   left: 0;
-  z-index: 100;
+  z-index: 1001;
 `;
 
-const ButtonLayout = styled.div`
+const Button = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-`;
-
-const Button = styled.button`
-  background: ${Colors.Primary};
-  color: #fff;
-  font-size: 3vmin;
-  font-weight: bold;
-  border: 0;
-  padding: 0 0 0 4px;
-  cursor: pointer;
 `;
 
 interface FooterProps {
@@ -46,27 +37,27 @@ const Footer = (props: FooterProps) => {
   /**
    * 이전 창 이동 함수
    */
-  const onClickPrev = () => {
+  const onPressArrow = useCallback(() => {
     navigation(`${prev}`);
-  };
+  }, []);
 
   /**
    * 메인 창 이동 함수
    */
-  const onClickMain = () => {
+  const onPressHome = useCallback(() => {
     navigation("/");
-  };
+  }, []);
 
   return (
     <Layout>
       {text &&
         <>
-          <ButtonLayout onClick={onClickPrev}>
+          <Button onClick={onPressArrow}>
             <Icon path={mdiChevronLeft} size="5vmin" color="#fff" />
-          </ButtonLayout>
-          <ButtonLayout onClick={onClickMain}>
+          </Button>
+          <Button onClick={onPressHome}>
             <Icon path={mdiHome } size="5vmin" color="#fff" />
-          </ButtonLayout>
+          </Button>
         </>
       }
     </Layout>

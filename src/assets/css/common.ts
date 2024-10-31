@@ -1,13 +1,13 @@
 import styled from "styled-components";
 
 export const Layout = styled.div`
+  position: relative;
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  position:relative;
 `;
 
 export const Title = styled.h2`

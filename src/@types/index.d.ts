@@ -15,6 +15,8 @@ declare namespace ApiResponse {
   }
 
   interface PathInfo {
+    flor_nm: string;
+    flor_tp_nm: string;
     canvas_img: string;
     canvas: { width: number, height: number };
     path: Path[];
