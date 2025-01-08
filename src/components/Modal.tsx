@@ -27,11 +27,11 @@ const Content = styled.div`
 `;
 
 const Modal = () => {
-  const { modal, setModal } = useAppStore();
+  const { modal, openModal } = useAppStore();
 
   return (
-    <BackgroundLayout onClick={() => setModal({ open: false, content: "" })}>
-      <Content>{modal.content ? modal.content : ""}</Content>
+    <BackgroundLayout onClick={() => openModal({ open: false, content: "" })}>
+      <Content>{modal.content ? `${modal.content}` : ""}</Content>
     </BackgroundLayout>
   );
 };

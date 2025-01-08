@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import { Layout, Title } from "../assets/css/common";
 import { useState } from "react";
-import axiosClient from "../utils/axiosClient";
 import useDataStore from "../store/useDataStore";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
@@ -23,7 +22,7 @@ const Input = styled.input`
 const KioskInfo = (props: CommonProps.ComponentProps) => {
   const { navigation } = props;
   const [ floor, setFloor ] = useState("");
-  const { setModal } = useAppStore();
+  const { openModal } = useAppStore();
   const { kiosk, setKiosk } = useDataStore();
 
   /**
@@ -38,30 +37,30 @@ const KioskInfo = (props: CommonProps.ComponentProps) => {
     if (floor.length !== 0) setFloor(floor.substring(0, floor.length - 1));
   };
   
-  const submit = async () => {
-    if (floor.length < 1) {
-      setModal({ open: true, content: "키오스크 ID를 입력해 주세요" });
-      return;
-    }
+  // const submit = async () => {
+  //   if (floor.length < 1) {
+  //     openModal({ open: true, content: "키오스크 ID를 입력해 주세요" });
+  //     return;
+  //   }
 
-    const { data } = await axiosClient.post("/api/kiosk/v1/parking/kiosk-list");
+  //   const { data } = await axiosClient.post("/api/kiosk/v1/parking/kiosk-list");
 
-    if (data.list.length > 0) {
-      for( let i=0; i<data.list.length; i++ ) {
-        if( data.list[i].idx === +floor) {
-          setKiosk({ node_id: data.list[i].kiosk_id, flor_nm: data.list[i].flor_nm, img_path: data.list[i].img_path_forward });
-          navigation("/kiosk/input");
-          return;
-        }
-      }
-    }
+  //   if (data.list.length > 0) {
+  //     for( let i=0; i<data.list.length; i++ ) {
+  //       if( data.list[i].idx === +floor) {
+  //         setKiosk({ node_id: data.list[i].kiosk_id, flor_nm: data.list[i].flor_nm, img_path: data.list[i].img_path_forward });
+  //         navigation("/kiosk/input");
+  //         return;
+  //       }
+  //     }
+  //   }
 
-    if (kiosk) {
-      setFloor("");
-      setModal({ open: true, content: "조회된 키오스크가 없습니다" });
-      return;
-    }
-  };
+  //   if (kiosk) {
+  //     setFloor("");
+  //     openModal({ open: true, content: "조회된 키오스크가 없습니다" });
+  //     return;
+  //   }
+  // };
 
   return (
     <Layout>

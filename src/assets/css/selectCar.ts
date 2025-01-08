@@ -39,14 +39,21 @@ export const CarInfoLayout = styled.div`
   }
 `;
 
-export const CarImageLayout = styled.div<{ $url?: string }>`
+export const CarImageLayout = styled.div`
   width: 25%;
   height: 100%;
-  background: url(${({ $url }) => $url});
-  background-size: cover;
-  background-position: center center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border-radius: 4px;
   border: 1px solid ${Colors.LightGray};
+  position: relative;
+`;
+
+export const CarImage = styled.img`
+  position: absolute;
+  width: 100%;
+  height: 100%;
 `;
 
 export const CarInfo = styled.div`
@@ -58,47 +65,47 @@ export const CarInfo = styled.div`
   margin: 0 16px;
 `;
 
-export const CarNumber = styled.p`
+export const CarNumber = styled.p<{ $mobile: boolean }>`
   display: flex;
   width: 100%;
   align-items: center;
   color: ${Colors.Primary};
-  font-size: 5vmin;
+  font-size: ${({ $mobile }) => $mobile ? "4.2vmin" : "5vmin"};;
   font-weight: bold;
   margin: 0 0 4px;
 `;
 
-export const CarInfoColumn = styled.div`
+export const CarInfoColumn = styled.div<{ $mobile: boolean }>`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 8px;
+  margin-bottom: ${({ $mobile }) => $mobile ? "4px" : "8px"};;
 
   &:last-child {
     margin-bottom: 0;
   }
 `;
 
-export const Label = styled.p`
+export const Label = styled.p<{ $mobile: boolean }>`
   display: flex;
   align-items: center;
-  font-size: 3vmin;
+  font-size: ${({ $mobile }) => $mobile ? "2.4vmin" : "3vmin"};
   font-weight: bold;
   margin: 0;
 `;
 
-export const Text = styled.p`
+export const Text = styled.p<{ $mobile: boolean }>`
   width: 60%;
   display: flex;
   align-items: center;
-  padding: 4px 8px;
+  padding: ${({ $mobile }) => $mobile ? "2px 4px" : "4px 8px"};
   margin: 0;
-  border-radius: 4px;
+  border-radius: ${({ $mobile }) => $mobile ? "2px" : "4px"};
   color: #fff;
   background: #006eb6;
   font-weight: bold;
-  font-size: 2.8vmin;
+  font-size: ${({ $mobile }) => $mobile ? "2vmin" : "2.8vmin"};
 `;
 
 export const LocationInfoButtonLayout = styled.div`

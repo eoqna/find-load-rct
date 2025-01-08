@@ -3,11 +3,11 @@ import { create } from "zustand";
 interface ModalState {
   open: boolean;
   content: string;
-}
+};
 
 interface DataState {
   modal: ModalState;
-  setModal: (data: ModalState) => void;
+  openModal: (data: ModalState) => void;
 };
 
 const defaultModalState: ModalState = {
@@ -17,7 +17,7 @@ const defaultModalState: ModalState = {
 
 const useAppStore = create<DataState>()((set) => ({
   modal: defaultModalState,
-  setModal: (data) => set({ modal: data }),
+  openModal: (data) => set({ modal: data }),
 }));
 
 export default useAppStore;

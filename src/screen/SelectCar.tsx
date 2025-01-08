@@ -11,21 +11,15 @@ import useAppStore from "../store/useAppStore";
 import { 
   Layout, ButtonText, 
   CarListLayout, CarInfoLayout,
-  CarImageLayout, CarInfo, 
+  CarImageLayout, CarImage, CarInfo, 
   CarInfoColumn, CarNumber, Label,
   LocationInfoButtonLayout, Text, 
 } from "../assets/css/selectCar";
+import initCarImg from "../assets/imgs/initcar.png";
 
-interface RequestProps {
-  start_node: string;
-  end_node?: string;
-  rotate?: number;
-};
-
-const SelectCar = (props: CommonProps.ComponentProps) => {
-  const { navigation } = props;
-  const { setModal } = useAppStore();
-  const { mobile, carList, setPathInfo, setSelectCar } = useDataStore();
+const SelectCar = ({ navigation }: CommonProps.ComponentProps) => {
+  const { openModal } = useAppStore();
+  const { kiosk, mobile, carList, setLocation, setPathInfo, setSelectCar } = useDataStore();
   const [ styles, setStyles ] = useState({ margin: 0, height: "" });
 
   /**
@@ -56,33 +50,48 @@ const SelectCar = (props: CommonProps.ComponentProps) => {
    * 길찾기 완료 후 길 찾기 화면으로 이동한다.
    */
   const onClickFindRoute = useCallback(async (item: ApiResponse.CarState) => {
-    let param: RequestProps;
-    let url = "";
+    try {
+      if (mobile) {
+        const { data } = await axiosClient.post(
+          "/api/mobile/v1/parking/find-car",
+          {
+            slot_id: item.slot_id,
+          },
+        );
 
-    if (mobile) {
-      url = "/api/mobile/v1/parking/find-route";
-      param = {
-        start_node: item.node_id,
-      };
-    } else {
-      url = "/api/kiosk/v1/parking/find-route";
-      param = {
-        rotate: 0,
-        start_node: "K20002",
-        end_node: item.node_id,
-      };
+        if (data.code === "404") {
+          openModal({ open: true, content: data.msg });
+          return;
+        }
+
+        setLocation(data.data);
+        setSelectCar(item);
+        navigation("/kiosk/find-car");
+
+      } else {
+        const { data } = await axiosClient.post(
+          "/api/kiosk/v1/parking/find-route",
+          {
+            rotate: kiosk.rotate,
+            start_node: kiosk.node_id,
+            end_node: item.node_id,
+          },
+        );
+
+        if (data.code === "404") {
+          openModal({ open: true, content: data.msg });
+          return;
+        }
+
+        setPathInfo(data.list);
+        setSelectCar(item);
+        navigation("/kiosk/route");
+      }
+
+    } catch (err) {
+      openModal({ open: true, content: kiosk.err_msg });
     }
-
-    const { data } = await axiosClient.post(url, param);
-
-    if (data.code === "404") {
-      setModal({ open: true, content: data.msg });
-      return;
-    }
-
-    setPathInfo(data.list);
-    setSelectCar(item);
-    navigation("/kiosk/route");
+    
   }, []);
 
   return (
@@ -91,20 +100,22 @@ const SelectCar = (props: CommonProps.ComponentProps) => {
       <CarListLayout 
         $margin={styles.margin} 
         $height={styles.height} 
-        $center={carList.length < 7 ? true : false}
+        $center={carList.length < 7}
       >
         {carList.map((car) => (
           <CarInfoLayout key={car.car_num}>
-            <CarImageLayout $url={car.img_path} />
+            <CarImageLayout>
+              <CarImage src={car.img_path} alt={car.car_num} onError={(e) => e.currentTarget.src = initCarImg} />
+            </CarImageLayout>
             <CarInfo>
-              <CarNumber>{car.car_num}</CarNumber>
-              <CarInfoColumn>
-                <Label>입차시간</Label>
-                <Text>{car.in_dtm}</Text>
+              <CarNumber $mobile={mobile}>{car.car_num}</CarNumber>
+              <CarInfoColumn $mobile={mobile}>
+                <Label $mobile={mobile}>입차시간</Label>
+                <Text $mobile={mobile}>{car.in_dtm}</Text>
               </CarInfoColumn>
-              <CarInfoColumn>
-                <Label>주차위치</Label>
-                <Text>{`${car.flor_nm}, ${car.column_nm}`}</Text>
+              <CarInfoColumn $mobile={mobile}>
+                <Label $mobile={mobile}>주차위치</Label>
+                <Text $mobile={mobile}>{`${car.flor_nm.replace("RF", "옥상")}`}</Text>
               </CarInfoColumn>
             </CarInfo>
             <LocationInfoButtonLayout onClick={() => onClickFindRoute(car)}>
@@ -114,7 +125,7 @@ const SelectCar = (props: CommonProps.ComponentProps) => {
           </CarInfoLayout>
         ))}
       </CarListLayout>
-      <Footer text="차량번호 입력" prev="/kiosk/input" />
+      {!mobile && <Footer text="차량번호 입력" prev="/kiosk/input" />}
     </Layout>
   );
 };

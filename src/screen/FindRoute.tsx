@@ -97,8 +97,7 @@ interface FloorNameProps {
 
 type ImageState = "first" | "waiting" | "second" | "";
 
-const FindRoute = (props: CommonProps.ComponentProps) => {
-  const { navigation } = props;
+const FindRoute = ({ navigation }: CommonProps.ComponentProps) => {
   const { mobile, pathInfo, selectCar } = useDataStore();
   const [ floorInfo, setFloorInfo ] = useState<FloorInfoProps>({ state: "", floor_nm: "", img_path: "" });
   const [ width, setWidth ] = useState(0);
@@ -308,18 +307,19 @@ const FindRoute = (props: CommonProps.ComponentProps) => {
             animationData={LottieData}
             onLoopComplete={() => setFloorInfo({ state: "second", floor_nm: pathInfo[1].flor_nm, img_path: pathInfo[1].canvas_img })}
           />
-          <LottieText>{floorName.first_floor} → {floorName.second_floor} 이동중</LottieText>
+          <LottieText>{floorName.first_floor.replace("RF", "옥상")} → {floorName.second_floor.replace("RF", "옥상")} 이동중</LottieText>
         </LottieLayout>
           :
         <ParkingImageLayout ref={imgRef}>
           <InfoLayout>
             <Information>고객님의 차량은&nbsp;</Information>
-            <ParkingPositionText>{`${selectCar.flor_nm}층 '${selectCar.column_nm}' 기둥사이`}</ParkingPositionText>
-            <Information>{`\n에 주차되어 있습니다.`}</Information>
+            <ParkingPositionText>
+              {`${selectCar.flor_nm.replace("RF", "옥상")}층 `}
+            </ParkingPositionText>
+            <Information>{`에 주차되어 있습니다.`}</Information>
           </InfoLayout>
-          <Floor>{floorInfo.floor_nm}</Floor>
+          <Floor>{floorInfo.floor_nm.replace("RF", "옥상")}</Floor>
           <ParkingImage
-            
             src={floorInfo.img_path}
             alt="Parking Image"
             onLoad={onLoadBackgroundImage}

@@ -57,6 +57,7 @@ export const NumberPad = styled.button<{ $default?: boolean }>`
   }
   cursor: pointer;
   outline: none;
+  
   &:first-child {
     margin-left: 0;
   }

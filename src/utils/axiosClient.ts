@@ -4,7 +4,7 @@ import { SERVER_URL } from "./config";
 
 const axiosClient = axios.create({
   baseURL: SERVER_URL,
-  timeout: 30000,
+  timeout: 10000,
 });
 
 export const initAxios = () => {

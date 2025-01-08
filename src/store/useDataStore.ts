@@ -1,24 +1,27 @@
 import { create } from "zustand"
 
 interface DataState {
-  platformWidth: number;
-  setPlatformWidth: (data: number) => void;
   mobile: boolean;
   isMobile: (data: boolean) => void;
   kiosk: ApiResponse.KioskInfo;
   setKiosk: (data: ApiResponse.KioskInfo) => void;
+  kioskList: ApiResponse.Node[];
+  setKioskList: (data: ApiResponse.Node[]) => void;
   carList: ApiResponse.CarState[];
   setCarList: (data: ApiResponse.CarState[]) => void;
   selectCar: ApiResponse.CarState;
   setSelectCar: (data: ApiResponse.CarState) => void;
+  location: ApiResponse.LocationInfo;
+  setLocation: (data: ApiResponse.LocationInfo) => void;
   pathInfo: ApiResponse.PathInfo[];
   setPathInfo: (data: ApiResponse.PathInfo[]) => void;
 };
 
-const defaultKioskState: ApiResponse.KioskInfo = {
+export const defaultKioskState: ApiResponse.KioskInfo = {
+  title: "",
   node_id: "",
-  flor_nm: "",
-  img_path: "",
+  rotate: 0,
+  err_msg: "",
 };
 
 const defaultCarState: ApiResponse.CarState = {
@@ -28,19 +31,30 @@ const defaultCarState: ApiResponse.CarState = {
   in_dtm: "",
   node_id: "",
   column_nm: "",
+  slot_id: 0,
+};
+
+const defaultLocationState: ApiResponse.LocationInfo = {
+  flor_nm: "",
+  flor_tp_nm: "",
+  canvas_img: "",
+  canvas: { width: 0, height: 0 },
+  position: { x: 0, y: 0, width: 0, height: 0, rotate: 0 },
 };
 
 const useDataStore = create<DataState>()((set) => ({
-  platformWidth: 0,
-  setPlatformWidth: (data) => set({ platformWidth: data }),
   mobile: false,
   isMobile: (data) => set({ mobile: data }),
   kiosk: defaultKioskState,
   setKiosk: (data) => set({ kiosk: data }),
+  kioskList: [],
+  setKioskList: (data) => set({ kioskList: data }),
   carList: [],
   setCarList: (data) => set({ carList: data }),
   selectCar: defaultCarState,
   setSelectCar: (data) => set({ selectCar: data }),
+  location: defaultLocationState,
+  setLocation: (data) => set({ location: data }),
   pathInfo: [],
   setPathInfo: (data) => set({ pathInfo: data }),
 }));

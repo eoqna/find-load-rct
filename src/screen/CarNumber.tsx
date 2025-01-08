@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import useDataStore from "../store/useDataStore";
 import Icon from '@mdi/react';
 import { mdiCloseThick } from '@mdi/js';
@@ -25,42 +25,18 @@ const defaultInputValue: InputValueProps = {
   fourth: "",
 };
 
-const CarNumber = (props: CommonProps.ComponentProps) => {
-  const { navigation } = props;
-  const { setModal } = useAppStore();
-  const { carList, kiosk, setCarList, setKiosk } = useDataStore();
+const CarNumber = ({ navigation }: CommonProps.ComponentProps) => {
+  const { openModal } = useAppStore();
+  const { mobile, kiosk, setCarList } = useDataStore();
   const [ inputs, setInputs ] = useState(defaultInputValue);
   const [ carNumber, setCarNumber ] = useState("");
-
-  /**
-   * 키오스크 정보를 초기화 한다. (모바일 X)
-   * 
-   * 나중에 키오스크 정보를 어떻게 받아와야할 지 생각해봐야함
-   */
-  const initKioskInfo = useCallback(() => {
-    setKiosk({
-      node_id: "K20002",
-      flor_nm: "P6",
-      img_path: "http://localhost:8080/self/img/bg/IFC_B6_0.png"
-    });
-  }, [kiosk]);
-
-  /**
-   * mobile이고 kiosk 정보가 없을 경우 메인 화면으로 이동한다.
-   * 
-   * 모바일이 아닌 경우 initKioskInfo() 함수를 호출한다.
-   * initKioskInfo : 키오스크 정보 초기화 함수
-   */
-  useEffect(() => {
-    initKioskInfo();
-  }, []);
 
   /**
    * 넘버 패드를 클릭(터치)하는 경우 호출되는 함수
    * 
    * 입력 받은 숫자를 차량 번호 및 inputs(차량 번호 입력 창)에 넣어준다.
    * 
-   * @param text : 사용자가 터치 한 숫자
+   * @param text: 사용자가 터치 한 숫자
    */
   const onPressNumber = useCallback((text: string) => {
     if (carNumber.length >= 4) return;
@@ -152,24 +128,31 @@ const CarNumber = (props: CommonProps.ComponentProps) => {
    * @returns 
    */
   const submit = useCallback(async () => {
-    if (carNumber.length < 4) {
-      setModal({ open: true, content: "차량번호 4자리를 입력해 주세요" });
-      return;
-    }
+    try {
+      if (carNumber.length < 4) {
+        openModal({ open: true, content: "차량번호 4자리를 입력해 주세요" });
+        return;
+      }
 
-    const { data } = await axiosClient.post("/api/kiosk/v1/parking/car-list", {
-      car_num : carNumber,
-    });
+      const { data } = await axiosClient.post(
+        "/api/kiosk/v1/parking/car-list",
+        {
+          car_num : carNumber,
+        }
+      );
 
-    if (data.code === "404") {
-      clear();
-      setModal({ open: true, content: data.msg });
-      return;
+      if (data.code === "404") {
+        clear();
+        openModal({ open: true, content: data.msg });
+        return;
+      }
+
+      convertDateFormat(data.list);
+      setCarList(data.list);
+      navigation("/kiosk/select");
+    } catch (err) {
+      openModal({ open: true, content: kiosk.err_msg });
     }
-    
-    convertDateFormat(data.list);
-    setCarList(data.list);
-    navigation("/kiosk/select");
   }, [carNumber]);
 
   return (
@@ -194,7 +177,7 @@ const CarNumber = (props: CommonProps.ComponentProps) => {
           <NumberPad onClick={submit}>확인</NumberPad>
         </NumberPadGroupLayout>
       </NumberPadLayout>
-      <Footer />
+      {!mobile && <Footer />}
     </Layout>
   );
 };
