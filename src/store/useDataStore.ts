@@ -31,7 +31,6 @@ const defaultCarState: ApiResponse.CarState = {
   in_dtm: "",
   node_id: "",
   column_nm: "",
-  slot_id: 0,
 };
 
 const defaultLocationState: ApiResponse.LocationInfo = {

@@ -55,7 +55,7 @@ const SelectCar = ({ navigation }: CommonProps.ComponentProps) => {
         const { data } = await axiosClient.post(
           "/api/mobile/v1/parking/find-car",
           {
-            slot_id: item.slot_id,
+            car_number: item.car_num,
           },
         );
 

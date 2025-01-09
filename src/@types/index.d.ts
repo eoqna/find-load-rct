@@ -17,7 +17,6 @@ declare namespace ApiResponse {
     node_id: string;
     flor_nm: string;
     column_nm: string;
-    slot_id: number;
   }
 
   interface CommonPathInfo {

@@ -35,7 +35,7 @@ const Br = styled.p`
 
 const Main = ({ navigation }: CommonProps.ComponentProps) => {
   const { openModal } = useAppStore();
-  const { kiosk, setKiosk, setKioskList } = useDataStore();
+  const { mobile, kiosk, setKiosk, setKioskList } = useDataStore();
   const [ title, setTitle ] = useState<string[]>([]);
 
   const getKioskList = useCallback(async () => {
@@ -51,13 +51,19 @@ const Main = ({ navigation }: CommonProps.ComponentProps) => {
   }, []);
 
   useEffect(() => {
-    if (!kiosk.title) {
-      getKioskList();
-      navigation("/config");
+    if (mobile) {
+      setTitle(["모바일", "내 차 찾기 서비스"]);
+      return;
     }
 
-    setTitle(kiosk.title.split('\n'));
-  }, [kiosk]);
+    if (kiosk.title) {
+      setTitle(kiosk.title.split('\n'));
+      return;
+    }
+
+    getKioskList();
+    navigation("/config");
+  }, [mobile, kiosk]);
 
   /**
    * 광고 배너 자동 슬라이드 함수

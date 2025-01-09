@@ -7,20 +7,21 @@ import Header from "../components/Header";
 import useAppStore from "../store/useAppStore";
 
 const Layout = styled.div`
-  width: calc(100% - 40px);
-  height: calc(100% - 40px);
+  width: calc(100% - 80px);
+  height: calc(100% - 80px);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 20px;
+  padding: 40px;
 `;
 
 const InputLayout = styled.div<{ $button?: boolean }>`
   width: 100%;
   display: flex;
-  justify-content: ${({ $button }) => $button ? "center" : "space-between"};
-  align-items: center;
+  flex-direction: ${({ $button }) => $button ? "row" : "column"};
+  align-items: ${({ $button }) => $button ? "center" : "flex-start"};
+  ${({ $button }) => $button && "justify-content: center;"}
   ${({ $button }) => $button ? "margin-top: 4px;" : "margin-bottom: 8px;"}
 `;
 
@@ -30,19 +31,21 @@ const Label = styled.label<{ $mobile?: boolean }>`
 `;
 
 const Input = styled.input<{ $mobile?: boolean }>`
-  width: 58%;
+  width: ${({ $mobile }) => $mobile ? "calc(100% - 8px)" : "calc(100% - 16px)"};
   border: 1px solid ${Colors.Black};
   font-size: ${({ $mobile }) => $mobile ? "2vmin" : "2.8vmin"};
-  padding: ${({ $mobile }) => $mobile ? "2px 4px" : "4px 8px"};
-  border-radius: ${({ $mobile }) => $mobile ? "2px" : "4px"};
+  padding: ${({ $mobile }) => $mobile ? "4px" : "4px 8px"};
+  border-radius: 4px;
+  outline: none;
 `;
 
 const Select = styled.select<{ $mobile?: boolean }>`
-  width: 60%;
+  width: 100%;
   border: 1px solid ${Colors.Black};
   font-size: ${({ $mobile }) => $mobile ? "2vmin" : "2.8vmin"};
-  padding: ${({ $mobile }) => $mobile ? "2px 4px" : "4px 8px"};
-  border-radius: ${({ $mobile }) => $mobile ? "2px" : "4px"};
+  padding: ${({ $mobile }) => $mobile ? "4px" : "4px 8px"};
+  border-radius: 4px;
+  outline: none;
 `;
 
 const Button = styled.button<{ $submit?: boolean }>`
@@ -50,9 +53,9 @@ const Button = styled.button<{ $submit?: boolean }>`
   border: 0px solid ${({ $submit }) => $submit ? Colors.Primary : Colors.Red};
   border-radius: 4px;
   color: ${Colors.White};
-  font-size: 2vmin;
+  font-size: 2.8vmin;
   font-weight: bold;
-  padding: 4px 8px;
+  padding: 6px 10px;
   ${({ $submit }) => $submit ? "margin-right: 4px;" : "margin-left: 4px;"}
 `;
 
@@ -88,7 +91,7 @@ const Config = ({ navigation }: CommonProps.ComponentProps) => {
 
   return (
     <Layout>
-      <Header title="키오스크 환경설정" desc="키오스크 번호와 화면 문구를 입력해 주세요" />
+      <Header title="키오스크 환경설정" desc="키오스크 정보를 설정해 주세요" />
       <InputLayout>
         <Label $mobile={mobile}>키오스크 번호</Label>
         <Select 
