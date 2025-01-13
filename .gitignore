@@ -10,6 +10,7 @@
 
 # production
 /build
+/dist
 /src/utils/config.ts
 
 # misc

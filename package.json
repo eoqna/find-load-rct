@@ -2,6 +2,7 @@
   "name": "find-load-rct",
   "version": "0.1.0",
   "private": true,
+  "type": "commonjs",
   "dependencies": {
     "@mdi/js": "^7.3.67",
     "@mdi/react": "^1.6.1",
@@ -13,6 +14,7 @@
     "@types/react": "^18.2.38",
     "@types/react-dom": "^18.2.17",
     "axios": "^1.6.2",
+    "electron-is-dev": "^3.0.1",
     "lottie-react": "^2.4.0",
     "moment": "^2.29.4",
     "react": "^18.2.0",
@@ -27,17 +29,28 @@
     "web-vitals": "^2.1.4",
     "zustand": "^4.4.6"
   },
+  "description": "YOUR_DESCRIPTION",
+  "author": "AUTHOR",
+  "main": "public/electron.js",
+  "homepage": "./",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "react-start": "react-scripts start",
+    "react-build": "react-scripts build",
+    "react-test": "react-scripts test",
+    "react-eject": "react-scripts eject",
+    "start": "concurrently \"cross-env BROWSER=none yarn react-start\" \"wait-on http://localhost:3000 && electron .\"",
+    "build": "yarn react-build && electron-builder",
+    "release": "yarn react-build && electron-builder --publish=always"
   },
   "eslintConfig": {
     "extends": [
       "react-app",
       "react-app/jest"
     ]
+  },
+  "build": {
+    "productName": "KIOSK 내 차 찾기",
+    "appId": "myApp"
   },
   "browserslist": {
     "production": [
@@ -50,5 +63,12 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "cross-env": "^7.0.3",
+    "electron": "^33.3.1",
+    "electron-builder": "^25.1.8",
+    "wait-on": "^8.0.2"
   }
 }

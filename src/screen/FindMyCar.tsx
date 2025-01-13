@@ -49,8 +49,6 @@ const ParkingImage = styled.img`
 
 const FindMyCar = ({ navigation }: CommonProps.ComponentProps) => {
   const { location, selectCar, setLocation } = useDataStore();
-  const [ title, setTitle ] = useState("차량 위치안내");
-  const [ desc, setDesc ] = useState("고객님의 차량 주차 위치를 안내합니다");
   const canvasRef = useRef<HTMLDivElement>(null);
   const imgRef = useRef<HTMLDivElement>(null);
 
@@ -132,7 +130,7 @@ const FindMyCar = ({ navigation }: CommonProps.ComponentProps) => {
 
   return (
     <Layout>
-      <Header title={title} desc={desc} />
+      <Header title="차량 위치안내" desc="고객님의 차량 주차 위치를 안내합니다" />
       <Canvas ref={canvasRef}></Canvas>
       <ParkingImageLayout ref={imgRef}>
         <InfoLayout>

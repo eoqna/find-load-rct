@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { CommonProps } from "../navigation";
 import { Colors } from "../utils/colors";
 import { useCallback, useRef, useState } from "react";
-import useDataStore, { defaultKioskState } from "../store/useDataStore";
+import useDataStore from "../store/useDataStore";
 import Header from "../components/Header";
 import useAppStore from "../store/useAppStore";
 

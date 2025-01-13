@@ -104,8 +104,6 @@ const FindRoute = ({ navigation }: CommonProps.ComponentProps) => {
   const [ convPt, setConvPt ] = useState<PointProps[]>([]);
   const [ markerPosition, setMarkerPosition ] = useState<PointProps>({x: 0, y: 0});
   const [ floorName, setFloorName ] = useState<FloorNameProps>({ first_floor: "", second_floor: "" });
-  const [ title, setTitle ] = useState("차량 위치안내");
-  const [ desc, setDesc ] = useState("현재 위치에서 고객님의 차량 위치까지 이동경로를 안내합니다");
   const [ idx, setIdx ] = useState(0);
   const canvasRef = useRef<HTMLDivElement>(null);
   const imgRef = useRef<HTMLDivElement>(null);
@@ -113,13 +111,6 @@ const FindRoute = ({ navigation }: CommonProps.ComponentProps) => {
   const kioskMarkerRef = useRef<HTMLImageElement>(null);
   let raf: number;
   let i = 0;
-
-  useEffect(() => {
-    if (mobile) {
-      setTitle("키오스크 위치안내");
-      setDesc("현재 위치에서 가장 가까운 키오스크까지 이동경로를 안내합니다");
-    }
-  }, []);
 
   /**
    * 캔버스 생성 및 길찾기 정보 초기화 함수
@@ -298,7 +289,7 @@ const FindRoute = ({ navigation }: CommonProps.ComponentProps) => {
 
   return (
     <Layout>
-      <Header title={title} desc={desc} />
+      <Header title="차량 위치안내" desc="현재 위치에서 고객님의 차량 위치까지 이동경로를 안내합니다" />
       <Canvas ref={canvasRef}></Canvas>
       {floorInfo.state === "waiting" ?
         <LottieLayout>

@@ -91,11 +91,11 @@ const Main = ({ navigation }: CommonProps.ComponentProps) => {
 
   return (
     <Layout onClick={onPressBackground}>
-      {title.map((line) => {
+      {title.map((line, idx) => {
         if (!line) {
-          return <Br />;
+          return <Br key={idx} />;
         } else {
-          return <Description>{line}</Description>
+          return <Description key={idx}>{line}</Description>
         }
       })}
     </Layout>
