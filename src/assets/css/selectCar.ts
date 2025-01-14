@@ -8,7 +8,7 @@ export const Layout = styled.div`
   flex-direction: column;
 `;
 
-export const CarListLayout = styled.div<{ $margin: number, $height: string, $center: boolean }>`
+export const ListLayout = styled.div<{ $margin: number, $height: string, $center: boolean }>`
   width: 100%;
   height: ${({ $height }) => $height};
   display: flex;
@@ -17,9 +17,6 @@ export const CarListLayout = styled.div<{ $margin: number, $height: string, $cen
   margin-top: ${({ $margin }) => `${$margin}px`};
   overflow-y: auto;
   ${({ $center }) => $center && "justify-content: center; align-items: center;"}
-  &::-webkit-scrollbar {
-    display: none;
-  }
 `;
 
 export const CarInfoLayout = styled.div`

@@ -1,6 +1,8 @@
 import { create } from "zustand"
 
 interface DataState {
+  url: string;
+  setUrl: (data: string) => void;
   mobile: boolean;
   isMobile: (data: boolean) => void;
   kiosk: ApiResponse.KioskInfo;
@@ -42,6 +44,8 @@ const defaultLocationState: ApiResponse.LocationInfo = {
 };
 
 const useDataStore = create<DataState>()((set) => ({
+  url: "",
+  setUrl: (data) => set({ url: data }),
   mobile: false,
   isMobile: (data) => set({ mobile: data }),
   kiosk: defaultKioskState,

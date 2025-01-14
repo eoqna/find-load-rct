@@ -74,11 +74,13 @@ const Config = ({ navigation }: CommonProps.ComponentProps) => {
     if (!kioskConfig.title) {
       openModal({ open: true, content: "메인화면 문구를 입력해 주세요" });
       titleRef.current?.focus();
+      return;
     }
 
     if (!kioskConfig.err_msg) {
       openModal({ open: true, content: "에러 메시지를 입력해 주세요" });
       msgRef.current?.focus();
+      return;
     }
 
     setKiosk(kioskConfig);

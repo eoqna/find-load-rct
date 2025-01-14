@@ -3,8 +3,9 @@ import styled from "styled-components";
 import { CommonProps } from "../navigation";
 import { Colors } from "../utils/colors";
 import useDataStore from "../store/useDataStore";
-import axiosClient from "../utils/axiosClient";
 import useAppStore from "../store/useAppStore";
+import axios from "axios";
+import { SERVER_URL } from "../utils/config";
 
 const Layout = styled.div`
   width: 100%;
@@ -35,29 +36,33 @@ const Br = styled.p`
 
 const Main = ({ navigation }: CommonProps.ComponentProps) => {
   const { openModal } = useAppStore();
-  const { mobile, kiosk, setKiosk, setKioskList } = useDataStore();
+  const { url, mobile, kiosk, setKiosk, setKioskList } = useDataStore();
   const [ title, setTitle ] = useState<string[]>([]);
 
   const getKioskList = useCallback(async () => {
-    const { data } = await axiosClient.post("/api/kiosk/v1/parking/kiosk-list");
-
-    if (data.code === "404") {
-      openModal({ open: true, content: data.msg });
-      return;
+    try {
+      const { data } = await axios.post(`${SERVER_URL}/api/kiosk/v1/parking/kiosk-list`);
+  
+      if (data.code === "404") {
+        openModal({ open: true, content: data.msg });
+        return;
+      }
+  
+      setKiosk({ ...kiosk, node_id: data.list[0].node_id });
+      setKioskList(data.list);
+    } catch(err) {
+      openModal({ open: true, content: kiosk.err_msg });
     }
-
-    setKiosk({ ...kiosk, node_id: data.list[0].node_id });
-    setKioskList(data.list);
   }, []);
 
   useEffect(() => {
     if (mobile) {
-      setTitle(["모바일", "내 차 찾기 서비스"]);
+      setTitle(["모바일", "", "", "", "내 차 찾기 서비스"]);
       return;
     }
 
     if (kiosk.title) {
-      setTitle(kiosk.title.split('\n'));
+      setTitle(kiosk.title.split('\\n'));
       return;
     }
 

@@ -7,7 +7,7 @@ import useDataStore from './store/useDataStore';
 
 const App = () => {
   const { modal, openModal } = useAppStore();
-  const { isMobile, setKiosk } = useDataStore();
+  const { isMobile, setUrl } = useDataStore();
 
   useEffect(() => {
     const mobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);

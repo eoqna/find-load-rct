@@ -10,7 +10,7 @@ import axiosClient from "../utils/axiosClient";
 import useAppStore from "../store/useAppStore";
 import { 
   Layout, ButtonText, 
-  CarListLayout, CarInfoLayout,
+  ListLayout, CarInfoLayout,
   CarImageLayout, CarImage, CarInfo, 
   CarInfoColumn, CarNumber, Label,
   LocationInfoButtonLayout, Text, 
@@ -97,7 +97,7 @@ const SelectCar = ({ navigation }: CommonProps.ComponentProps) => {
   return (
     <Layout>
       <Header title="차량선택" desc="고객님의 차량을 선택해 주세요" />
-      <CarListLayout 
+      <ListLayout 
         $margin={styles.margin} 
         $height={styles.height} 
         $center={carList.length < 7}
@@ -124,7 +124,7 @@ const SelectCar = ({ navigation }: CommonProps.ComponentProps) => {
             </LocationInfoButtonLayout>
           </CarInfoLayout>
         ))}
-      </CarListLayout>
+      </ListLayout>
       {!mobile && <Footer text="차량번호 입력" prev="/kiosk/input" />}
     </Layout>
   );
