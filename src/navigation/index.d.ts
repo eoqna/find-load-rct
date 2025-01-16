@@ -4,4 +4,4 @@ declare namespace CommonProps {
   interface ComponentProps {
     navigation: NavigateFunction;
   }
-};
+}

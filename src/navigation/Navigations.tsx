@@ -24,16 +24,16 @@ const Navigations = () => {
   useEventTimeout(() => navigation('/'));
 
   return (
-    <Layout className="main" >
+    <Layout className="main">
       <Routes>
         <Route index element={<Main navigation={navigation} />} />
-        <Route path="/config" element={<Config navigation={navigation} />} />
         <Route path="kiosk">
           <Route path="input" element={<CarNumber navigation={navigation} />} />
           <Route path="select" element={<SelectCar navigation={navigation} />} />
           <Route path="route" element={<FindRoute navigation={navigation} />} />
           <Route path="find-car" element={<FindMyCar navigation={navigation} />} />
         </Route>
+        <Route path="/config" element={<Config navigation={navigation} />} />
         <Route path="/common/footer" element={<Footer />} />
         <Route path="/*" element={<NotFoundPage navigation={navigation} />} />
       </Routes>

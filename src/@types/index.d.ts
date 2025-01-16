@@ -46,4 +46,4 @@ declare namespace ApiResponse {
     x: number;
     y: number;
   }
-};
+}
