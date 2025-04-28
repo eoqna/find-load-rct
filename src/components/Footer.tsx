@@ -1,29 +1,9 @@
-import styled from "styled-components";
 import Icon from '@mdi/react';
 import { mdiChevronLeft, mdiHome } from '@mdi/js';
 import { useNavigate } from "react-router";
-import { Colors } from "../utils/colors";
 import { useCallback } from "react";
-
-const Layout = styled.footer`
-  display: flex;
-  width: calc(100% - 20px);
-  height: 6%;
-  padding: 0 10px;
-  justify-content: space-between;
-  align-items: center;
-  position: absolute;
-  background: ${Colors.Primary};
-  bottom: 0;
-  left: 0;
-  z-index: 1001;
-`;
-
-const Button = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
+import { Colors } from '../utils/colors';
+import useDataStore from '../stores/useDataStore';
 
 interface FooterProps {
   text?: string;
@@ -32,6 +12,7 @@ interface FooterProps {
 
 const Footer = (props: FooterProps) => {
   const { prev, text } = props;
+  const { kiosk } = useDataStore();
   const navigation = useNavigate();
 
   /**
@@ -45,22 +26,25 @@ const Footer = (props: FooterProps) => {
    * 메인 창 이동 함수
    */
   const onPressHome = useCallback(() => {
-    navigation("/");
+    navigation(`/?id=${kiosk.node_id}&rotation=${kiosk.rotation}`);
   }, []);
 
   return (
-    <Layout>
+    <div 
+      className="w-full h-[6%] flex justify-between items-center px-2.5 py-0 absolute bottom-0 left-0 z-40"
+      style={{ background: Colors.Primary }}
+    >
       {text &&
         <>
-          <Button onClick={onPressArrow}>
+          <div className="flex justify-center items-center" onClick={onPressArrow}>
             <Icon path={mdiChevronLeft} size="5vmin" color="#fff" />
-          </Button>
-          <Button onClick={onPressHome}>
+          </div>
+          <div className="flex justify-center items-center" onClick={onPressHome}>
             <Icon path={mdiHome } size="5vmin" color="#fff" />
-          </Button>
+          </div>
         </>
       }
-    </Layout>
+    </div>
   );
 };
 

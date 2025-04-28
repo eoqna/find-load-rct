@@ -2,7 +2,7 @@ import { create } from "zustand";
 
 interface ModalState {
   open: boolean;
-  content: string;
+  content: string[];
 };
 
 interface DataState {
@@ -12,7 +12,7 @@ interface DataState {
 
 const defaultModalState: ModalState = {
   open: false,
-  content: "",
+  content: [],
 };
 
 const useAppStore = create<DataState>()((set) => ({

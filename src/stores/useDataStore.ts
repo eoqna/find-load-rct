@@ -1,14 +1,10 @@
 import { create } from "zustand"
 
 interface DataState {
-  url: string;
-  setUrl: (data: string) => void;
   mobile: boolean;
   isMobile: (data: boolean) => void;
   kiosk: ApiResponse.KioskInfo;
   setKiosk: (data: ApiResponse.KioskInfo) => void;
-  kioskList: ApiResponse.Node[];
-  setKioskList: (data: ApiResponse.Node[]) => void;
   carList: ApiResponse.CarState[];
   setCarList: (data: ApiResponse.CarState[]) => void;
   selectCar: ApiResponse.CarState;
@@ -20,10 +16,8 @@ interface DataState {
 };
 
 export const defaultKioskState: ApiResponse.KioskInfo = {
-  title: "",
   node_id: "",
-  rotate: 0,
-  err_msg: "",
+  rotation: 0,
 };
 
 const defaultCarState: ApiResponse.CarState = {
@@ -44,14 +38,10 @@ const defaultLocationState: ApiResponse.LocationInfo = {
 };
 
 const useDataStore = create<DataState>()((set) => ({
-  url: "",
-  setUrl: (data) => set({ url: data }),
   mobile: false,
   isMobile: (data) => set({ mobile: data }),
   kiosk: defaultKioskState,
   setKiosk: (data) => set({ kiosk: data }),
-  kioskList: [],
-  setKioskList: (data) => set({ kioskList: data }),
   carList: [],
   setCarList: (data) => set({ carList: data }),
   selectCar: defaultCarState,

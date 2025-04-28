@@ -1,54 +1,12 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import styled from "styled-components";
+import { useCallback, useEffect, useRef } from "react";
 import { Colors } from "../utils/colors";
-import { CommonProps } from "../navigation";
-import useDataStore from "../store/useDataStore";
+import { NavigationProps } from "../navigation";
+import useDataStore from "../stores/useDataStore";
 import Header from "../components/Header";
-import { Layout } from "../assets/css/common";
+import { fullLayout } from "../utils/component";
 
-const Canvas = styled.div``;
-
-const InfoLayout = styled.div`
-  position: absolute;
-  width: 100%;
-  top: calc(0px - 3vmin - 20px);
-  text-align: center;
-`;
-
-const Information = styled.span`
-  font-size: 3vmin;
-  font-weight: bold;
-  color: ${Colors.Black};
-`;
-
-const PositionText = styled.span`
-  font-size: 3vmin;
-  font-weight: bold;
-  color: ${Colors.Red};
-`;
-
-const Floor = styled.div`
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  color: ${Colors.Black};
-  font-size: 4vmin;
-  font-weight: bold;
-  z-index: 1001;
-`;
-
-const ParkingImageLayout = styled.div`
-  position: absolute;
-  width: 95%;
-`;
-
-const ParkingImage = styled.img`
-  width: 100%;
-  height: 100%;
-`;
-
-const FindMyCar = ({ navigation }: CommonProps.ComponentProps) => {
-  const { location, selectCar, setLocation } = useDataStore();
+const FindMyCar = ({ navigation }: NavigationProps) => {
+  const { location, selectCar, kiosk, setLocation } = useDataStore();
   const canvasRef = useRef<HTMLDivElement>(null);
   const imgRef = useRef<HTMLDivElement>(null);
 
@@ -80,7 +38,7 @@ const FindMyCar = ({ navigation }: CommonProps.ComponentProps) => {
 
   useEffect(() => {
       if (!location.position.x || !location.position.y) {
-          navigation("/");
+          navigation(`/?id=${kiosk.node_id}&rotation=${kiosk.rotation}`);
       } else {
           init();
       }
@@ -129,23 +87,24 @@ const FindMyCar = ({ navigation }: CommonProps.ComponentProps) => {
   };
 
   return (
-    <Layout>
+    <div className={fullLayout}>
       <Header title="차량 위치안내" desc="고객님의 차량 주차 위치를 안내합니다" />
-      <Canvas ref={canvasRef}></Canvas>
-      <ParkingImageLayout ref={imgRef}>
-        <InfoLayout>
-          <Information>고객님의 차량은&nbsp;</Information>
-          <PositionText>{`${selectCar.flor_nm.replace("RF", "옥상")}층 `}</PositionText>
-          <Information>{`에 주차되어 있습니다.`}</Information>
-        </InfoLayout>
-        <Floor>{selectCar.flor_nm.replace("RF", "옥상")}</Floor>
-        <ParkingImage
+      <div ref={canvasRef}></div>
+      <div className="absolute w-[95%]" ref={imgRef}>
+        <div className="w-full absolute top-[calc(3vmin-20px)] text-center">
+          <span className="text-[3vmin] font-bold">고객님의 차량은&nbsp;</span>
+          <span className="text-[3vmin] font-bold" style={{ color: Colors.Red }}>{`${selectCar.flor_nm.replace("RF", "옥상")}층 `}</span>
+          <span className="text-[3vmin] font-bold">에 주차되어 있습니다.</span>
+        </div>
+        <div className="absolute top-2.5 left-2.5 text-[4vmin] font-bold z-40">{selectCar.flor_nm.replace("RF", "옥상")}</div>
+        <img
+          className="w-full h-full"
           src={location.canvas_img}
           alt="Parking Image"
           onLoad={drawLine}
         />
-      </ParkingImageLayout>
-    </Layout>
+      </div>
+    </div>
   );
 };
 

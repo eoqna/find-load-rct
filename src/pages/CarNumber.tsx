@@ -1,15 +1,15 @@
 import { useCallback, useState } from "react";
-import useDataStore from "../store/useDataStore";
+import useDataStore from "../stores/useDataStore";
 import Icon from '@mdi/react';
 import { mdiCloseThick } from '@mdi/js';
 import Footer from "../components/Footer";
 import Header from "../components/Header";
-import axiosClient from "../utils/axiosClient";
-import useAppStore from "../store/useAppStore";
-import { Layout } from "../assets/css/common";
-import { InputLayout, Input, NumberPad, NumberPadLayout, NumberPadGroupLayout } from "../assets/css/numberPad";
-import { CommonProps } from "../navigation";
+import useAppStore from "../stores/useAppStore";
+import { NavigationProps } from "../navigation";
 import { inputValue, numbers } from "../contants";
+import { buttonPad, fullLayout, numberButton, numberPad } from "../utils/component";
+import { Colors } from "../utils/colors";
+import axios from "axios";
 
 interface InputValueProps {
   first: string;
@@ -25,9 +25,9 @@ const defaultInputValue: InputValueProps = {
   fourth: "",
 };
 
-const CarNumber = ({ navigation }: CommonProps.ComponentProps) => {
+const CarNumber = ({ navigation }: NavigationProps) => {
   const { openModal } = useAppStore();
-  const { mobile, kiosk, setCarList } = useDataStore();
+  const { mobile, setCarList } = useDataStore();
   const [ inputs, setInputs ] = useState(defaultInputValue);
   const [ carNumber, setCarNumber ] = useState("");
 
@@ -130,11 +130,13 @@ const CarNumber = ({ navigation }: CommonProps.ComponentProps) => {
   const submit = useCallback(async () => {
     try {
       if (carNumber.length < 4) {
-        openModal({ open: true, content: "차량번호 4자리를 입력해 주세요" });
-        return;
+        return openModal({ 
+          open: true, 
+          content: ["차량번호 4자리를 입력해 주세요"],
+        });
       }
 
-      const { data } = await axiosClient.post(
+      const { data } = await axios.post(
         "/api/kiosk/v1/parking/car-list",
         {
           car_num : carNumber,
@@ -143,42 +145,58 @@ const CarNumber = ({ navigation }: CommonProps.ComponentProps) => {
 
       if (data.code === "404") {
         clear();
-        openModal({ open: true, content: data.msg });
-        return;
+        return openModal({ 
+          open: true, 
+          content: ["조회된 차량이 없습니다", "차량번호를 확인해 주세요"],
+        });
       }
 
       convertDateFormat(data.list);
       setCarList(data.list);
-      navigation("/kiosk/select");
+      navigation("/select");
     } catch (err) {
-      openModal({ open: true, content: kiosk.err_msg });
+      openModal({ 
+        open: true, 
+        content: ["차량 조회 중 오류가 발생했습니다", "관리자에게 문의해 주세요"],
+      });
     }
   }, [carNumber]);
 
   return (
-    <Layout>
+    <div className={fullLayout}>
       <Header title="차량번호 입력" desc="고객님의 차량번호 4자리를 입력해 주세요" />
-      <InputLayout>
+      <div 
+        className="w-[calc(100%-40px)] flex flex-row justify-center items-center mx-5 border-1 rounded-md"
+        style={{ borderColor: Colors.DarkGray }}
+      >
         {inputValue.map((item) => (
-          <Input key={item.idx} type="text" readOnly maxLength={1} value={Object.values(inputs)[item.idx]} />
+          <input 
+            key={item.idx} 
+            type="text" 
+            readOnly 
+            maxLength={1} 
+            value={Object.values(inputs)[item.idx]} 
+            className="w-1/5 h-[13vh] text-[7vmin] font-bold text-center border-0 outline-0 cursor-default"
+            style={{ color: Colors.Primary }}
+          />
         ))}
-      </InputLayout>
-      <NumberPadLayout>
+      </div>
+      <div className="w-[calc(100%-38px)] mt-2.5 mx-5 mb-0 text-center">
         {numbers.map((num) => (
-          <NumberPadGroupLayout key={`number-pad-${num[0].text}`}>
-            <NumberPad $default onClick={(e) => onPressNumber(e.currentTarget.innerHTML)}>{num[0].text}</NumberPad>
-            <NumberPad $default onClick={(e) => onPressNumber(e.currentTarget.innerHTML)}>{num[1].text}</NumberPad>
-            <NumberPad $default onClick={(e) => onPressNumber(e.currentTarget.innerHTML)}>{num[2].text}</NumberPad>
-          </NumberPadGroupLayout>
+          <div key={`number-pad-${num[0].text}`} className="w-full flex flex-row">
+            <button className={`${numberButton} ${numberPad}`} onClick={(e) => onPressNumber(e.currentTarget.innerHTML)}>{num[0].text}</button>
+            <button className={`${numberButton} ${numberPad}`} onClick={(e) => onPressNumber(e.currentTarget.innerHTML)}>{num[1].text}</button>
+            <button className={`${numberButton} ${numberPad}`} onClick={(e) => onPressNumber(e.currentTarget.innerHTML)}>{num[2].text}</button>
+          </div>
         ))}
-        <NumberPadGroupLayout>
-          <NumberPad onClick={onPressCancel}><Icon path={mdiCloseThick} size="4vmin" /></NumberPad>
-          <NumberPad $default onClick={(e) => onPressNumber(e.currentTarget.innerHTML)}>0</NumberPad>
-          <NumberPad onClick={submit}>확인</NumberPad>
-        </NumberPadGroupLayout>
-      </NumberPadLayout>
+        <div className="w-full flex flex-row">
+          <button className={`${numberButton} ${buttonPad}`} onClick={onPressCancel}><Icon path={mdiCloseThick} size="4vmin" /></button>
+          <button className={`${numberButton} ${numberPad}`} onClick={(e) => onPressNumber(e.currentTarget.innerHTML)}>0</button>
+          <button className={`${numberButton} ${buttonPad}`} onClick={submit}>확인</button>
+        </div>
+      </div>
       {!mobile && <Footer />}
-    </Layout>
+    </div>
   );
 };
 

@@ -1,0 +1,13 @@
+@import 'tailwindcss';
+
+.number-button {
+  @apply w-1/3 h-[8vh] m-1 p-0 text-center font-bold text-[4vmin] cursor-pointer outline-0 first:ml-0 last:mr-0 border-1 border-gray-600
+}
+
+.number-pad {
+  @apply bg-white text-black
+}
+
+.button-pad {
+  @apply bg-[#006eb6] text-white
+}

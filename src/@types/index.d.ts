@@ -1,9 +1,7 @@
 declare namespace ApiResponse {
   interface KioskInfo {
-    title: string;
     node_id: string;
-    rotate: number;
-    err_msg: string;
+    rotation: number;
   }
 
   interface Node {
@@ -46,4 +44,4 @@ declare namespace ApiResponse {
     x: number;
     y: number;
   }
-}
+};
